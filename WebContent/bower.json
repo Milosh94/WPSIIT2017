@@ -1,0 +1,15 @@
+{
+  "name": "WPSIIT2017",
+  "homepage": "https://github.com/Milosh94/WPSIIT2017",
+  "authors": [
+    "Milosh94 <milossm94@hotmail.com>"
+  ],
+  "description": "Project",
+  "main": "",
+  "license": "MIT",
+  "private": true,
+  "dependencies": {
+    "angular": "angularjs#^1.6.9",
+    "jquery": "^3.3.1"
+  }
+}
