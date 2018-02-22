@@ -139,5 +139,9 @@ public class User {
 				+ ", picture=" + picture + ", blocked=" + blocked + ", admin=" + admin + "]";
 	}
 	
-	
+	public String toFile(){
+		return this.id + "; " + this.username + "; " + this.password + "; " + this.firstName + "; " + this.lastName
+				+ "; " + this.phone + "; " + this.email + "; " + this.territory.getId() + "; " + this.picture + "; "
+				+ this.blocked + "; " + this.admin;
+	}
 }

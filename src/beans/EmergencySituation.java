@@ -3,6 +3,7 @@ package beans;
 import java.util.Date;
 
 import util.UrgentLevel;
+import util.Utils;
 
 public class EmergencySituation {
 
@@ -144,4 +145,9 @@ public class EmergencySituation {
 				+ volunteer + "]";
 	}
 	
+	public String toFile(){
+		return this.id + "; " + this.name + "; " + this.district + "; " + this.description + "; " + Utils.dateToString(this.dateTime) + 
+				"; " + this.location + "; " + this.territory.getId() + "; " + this.urgentLevel.toString() + 
+				"; " + this.picture + "; " +this.status + "; " + this.volunteer.getId();
+	}
 }

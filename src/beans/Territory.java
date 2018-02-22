@@ -60,4 +60,7 @@ public class Territory {
 				+ residentCount + "]";
 	}
 	
+	public String toFile(){
+		return this.id + "; " + this.name + "; " + this.surfaceArea + "; " + this.residentCount;
+	}
 }
