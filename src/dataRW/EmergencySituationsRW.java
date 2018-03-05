@@ -81,17 +81,17 @@ public class EmergencySituationsRW {
 				int territoryId = -1;
 				int userId = -1;
 				while(st.hasMoreTokens()){
-					id = Integer.parseInt(st.nextToken());
+					id = Integer.parseInt(st.nextToken().trim());
 					emergencySituation.setId(id);
 					emergencySituation.setDistrict(st.nextToken().trim());
 					emergencySituation.setDescription(st.nextToken().trim());
-					emergencySituation.setDateTime(Utils.stringToDate(st.nextToken()));
+					emergencySituation.setDateTime(Utils.stringToDate(st.nextToken().trim()));
 					emergencySituation.setLocation(st.nextToken().trim());
-					territoryId = Integer.parseInt(st.nextToken());
+					territoryId = Integer.parseInt(st.nextToken().trim());
 					emergencySituation.setUrgentLevel(UrgentLevel.valueOf(st.nextToken().trim()));
 					emergencySituation.setPicture(st.nextToken().trim());
-					emergencySituation.setStatus(Boolean.parseBoolean(st.nextToken()));
-					userId = Integer.parseInt(st.nextToken());
+					emergencySituation.setStatus(Boolean.parseBoolean(st.nextToken().trim()));
+					userId = Integer.parseInt(st.nextToken().trim());
 				}
 				emergencySituation.setTerritory(territories.get(territoryId));
 				emergencySituation.setVolunteer(users.get(userId));

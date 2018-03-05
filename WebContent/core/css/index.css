@@ -1,0 +1,21 @@
+.change-cursor{
+	cursor: pointer;
+}
+
+#formLogin{
+	min-width:300px;
+}
+
+#profilePicture{
+	height: 100px;
+	margin-bottom: 15px;
+	max-width: 200px;
+}
+
+#profilePictureInput{
+	display: none;
+}
+
+#profileRemoveButton{
+	display: none;
+}

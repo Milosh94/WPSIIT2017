@@ -79,13 +79,13 @@ public class CommentsRW {
 				int emergencySituationId = -1;
 				int userId = -1;
 				while(st.hasMoreTokens()){
-					id = Integer.parseInt(st.nextToken());
+					id = Integer.parseInt(st.nextToken().trim());
 					comment.setId(id);
-					textId = Integer.parseInt(st.nextToken());
+					textId = Integer.parseInt(st.nextToken().trim());
 					comment.setTextId(textId);
-					comment.setDateTime(Utils.stringToDate(st.nextToken()));
-					userId = Integer.parseInt(st.nextToken());
-					emergencySituationId = Integer.parseInt(st.nextToken());
+					comment.setDateTime(Utils.stringToDate(st.nextToken().trim()));
+					userId = Integer.parseInt(st.nextToken().trim());
+					emergencySituationId = Integer.parseInt(st.nextToken().trim());
 				}
 				comment.setUser(users.get(userId));
 				comment.setEmergencySituation(emergencySituations.get(emergencySituationId));

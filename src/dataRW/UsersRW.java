@@ -56,7 +56,7 @@ public class UsersRW {
 				int territoryId = -1;
 				int id = -1;
 				while(st.hasMoreTokens()){
-					id = Integer.parseInt(st.nextToken());
+					id = Integer.parseInt(st.nextToken().trim());
 					user.setId(id);
 					user.setUsername(st.nextToken().trim());
 					user.setPassword(st.nextToken().trim());
@@ -64,10 +64,10 @@ public class UsersRW {
 					user.setLastName(st.nextToken().trim());
 					user.setPhone(st.nextToken().trim());
 					user.setEmail(st.nextToken().trim());
-					territoryId = Integer.parseInt(st.nextToken());
+					territoryId = Integer.parseInt(st.nextToken().trim());
 					user.setPicture(st.nextToken().trim());
-					user.setBlocked(Boolean.parseBoolean(st.nextToken()));
-					user.setAdmin(Boolean.parseBoolean(st.nextToken()));
+					user.setBlocked(Boolean.parseBoolean(st.nextToken().trim()));
+					user.setAdmin(Boolean.parseBoolean(st.nextToken().trim()));
 				}
 				user.setTerritory(this.territories.get(territoryId));
 				this.users.put(id, user);

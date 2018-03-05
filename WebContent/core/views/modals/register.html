@@ -1,0 +1,83 @@
+<div class="modal-header">
+	<h3 class="modal-title">Registration form</h3>
+</div>
+<div class="modal-body">
+	<form name="vm.registerForm" ng-submit="vm.register(vm.registerForm.$valid)" novalidate>
+		<div class="form-group" ng-class="{'has-error': vm.registerForm.username.$touched && vm.registerForm.username.$invalid}">
+			<label for="usernameId">Username</label>
+			<input name="username" id="usernameId" type="text" class="form-control" ng-model="vm.data.username" ng-change="vm.usernameExists()" required/>
+			<div class="help-block" ng-messages="vm.registerForm.username.$error" ng-show="vm.registerForm.username.$touched">
+				<p ng-message="required">This field is required</p>
+				<p ng-message="usernameExists">Already exists</p>
+			</div>
+		</div>
+		<div class="form-group" ng-class="{'has-error': vm.registerForm.password.$touched && vm.registerForm.password.$invalid}">
+			<label for="passwordId">Password</label>
+			<input name="password" id="passwordId" type="password" class="form-control" ng-model="vm.data.password" ng-change="vm.removeError()" required/>
+			<div class="help-block" ng-messages="vm.registerForm.password.$error" ng-show="vm.registerForm.password.$touched">
+				<p ng-message="required">This field is required</p>
+			</div>
+		</div>
+		<div class="form-group" ng-class="{'has-error': vm.registerForm.passwordConfirm.$touched && vm.registerForm.passwordConfirm.$invalid}">
+			<label for="passwordConfirm">Confirm password</label>
+			<input name="passwordConfirm" id="passwordConfirm" type="password" class="form-control" ng-model="vm.confirmPassword" ng-change="vm.removeError()" required/>
+			<div class="help-block" ng-messages="vm.registerForm.passwordConfirm.$error" ng-show="vm.registerForm.passwordConfirm.$touched">
+				<p ng-message="required">This field is required</p>
+				<p ng-message="differentPasswords">Passwords do not match</p>
+			</div>
+		</div>
+		<div class="form-group" ng-class="{'has-error': vm.registerForm.firstName.$touched && vm.registerForm.firstName.$invalid}">
+			<label for="firstName">First name</label>
+			<input name="firstName" id="firstName" type="text" class="form-control" ng-model="vm.data.firstName" required/>
+			<div class="help-block" ng-messages="vm.registerForm.firstName.$error" ng-show="vm.registerForm.firstName.$touched">
+				<p ng-message="required">This field is required</p>
+			</div>
+		</div>
+		<div class="form-group" ng-class="{'has-error': vm.registerForm.lastName.$touched && vm.registerForm.lastName.$invalid}">
+			<label for="lastName">Last name</label>
+			<input name="lastName" id="lastName" type="text" class="form-control" ng-model="vm.data.lastName" required/>
+			<div class="help-block" ng-messages="vm.registerForm.lastName.$error" ng-show="vm.registerForm.lastName.$touched">
+				<p ng-message="required">This field is required</p>
+			</div>
+		</div>
+		<div class="fomr-group" ng-class="{'has-error': vm.registerForm.phone.$touched && vm.registerForm.phone.$invalid}">
+			<label for="phone">Phone</label>
+			<input name="phone" id="phone" type="text" class="form-control" ng-model="vm.data.phone" required/>
+			<div class="help-block" ng-messages="vm.registerForm.phone.$error" ng-show="vm.registerForm.phone.$touched">
+				<p ng-message="required">This field is required</p>
+			</div>
+		</div>
+		<div class="form-group" ng-class="{'has-error': vm.registerForm.email.$touched && vm.registerForm.email.$invalid}">
+			<label for="email">Email</label>
+			<input name="email" id="email" type="email" class="form-control" ng-model="vm.data.email" required/>
+			<div class="help-block" ng-messages="vm.registerForm.email.$error" ng-show="vm.registerForm.email.$touched">
+				<p ng-message="required">This field is required</p>
+				<p ng-message="email">This is not valid email</p>
+			</div>
+		</div>
+		<div class="form-group" ng-class="{'has-error': vm.registerForm.hiddenTerritory.$touched && vm.registerForm.hiddenTerritory.$invalid}">
+			<label>Territory</label>
+			<ui-select ng-model="vm.data.territory">
+				<ui-select-match>{{$select.selected.name}}</ui-select-match>
+				<ui-select-choices repeat="t in vm.territories">
+					<span ng-bind="t.name"></span>
+				</ui-select-choices>
+			</ui-select>
+			<input type="hidden" name="hiddenTerritory" class="form-control" ng-model="vm.data.territory" required/>
+			<div class="help-block" ng-messages="vm.registerForm.hiddenTerritory.$error" ng-show="vm.registerForm.hiddenTerritory.$touched">
+				<p ng-message="required">This field is required</p>
+			</div>
+		</div>
+		<img id="profilePicture" src="images/web/no-image.png" alt="No image selected"/>
+  		<div class="form-group">
+     		<label for="profilePictureInput">Profile picture</label>
+     		<label class="btn btn-primary">Browse&hellip;<input type="file" id="profilePictureInput" accept="image/*" file-model="vm.file"/></label>
+     		<button id="profileRemoveButton" class="btn btn-danger" type="button" ng-click="vm.removeFile()" remove-file>Remove</button>
+   		</div>
+		<button type="submit" ng-hide="true"></button>
+	</form>
+</div>
+<div class="modal-footer">
+	<button class="btn btn-primary" ng-click="vm.register(vm.registerForm.$valid, vm.registerForm)">Register</button>
+	<button class="btn btn-default" ng-click="vm.cancel()">Cancel</button>
+</div>

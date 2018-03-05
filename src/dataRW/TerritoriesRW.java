@@ -49,11 +49,11 @@ public class TerritoriesRW {
 				Territory territory = new Territory();
 				int id = -1;
 				while(st.hasMoreTokens()){
-					id = Integer.parseInt(st.nextToken());
+					id = Integer.parseInt(st.nextToken().trim());
 					territory.setId(id);
 					territory.setName(st.nextToken().trim());
-					territory.setSurfaceArea(Double.parseDouble(st.nextToken()));
-					territory.setResidentCount(Integer.parseInt(st.nextToken()));
+					territory.setSurfaceArea(Double.parseDouble(st.nextToken().trim()));
+					territory.setResidentCount(Integer.parseInt(st.nextToken().trim()));
 				}
 				this.territories.put(id, territory);
 			}
