@@ -13,7 +13,7 @@
 		}
 		
 		retObj.register = function(fd){
-			return Restangular.all("register").withHttpConfig({transformRequest: angular.identity}).customPOST(fd, "", undefined, {'Content-Type': undefined});
+			return Restangular.all("register").withHttpConfig({transformRequest: angular.identity}).customPOST(fd, "", undefined, {"Content-Type": undefined});
 		}
 		
 		retObj.logout = function(){
@@ -22,6 +22,10 @@
 		
 		retObj.getLoggedUser = function(){
 			return Restangular.all("logged-user").customGET("");
+		}
+		
+		retObj.updateUser = function(fd){
+			return Restangular.all("user").withHttpConfig({transformRequest: angular.identity}).customPUT(fd, "", undefined, {"Content-Type": undefined});
 		}
 		
 		return retObj;

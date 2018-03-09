@@ -1,12 +1,10 @@
 package dto;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import beans.Territory;
 
-public class RegisterDTO {
-	
+public class UserDTO {
+
 	private String username;
-	
-	private String password;
 	
 	private String firstName;
 	
@@ -16,22 +14,30 @@ public class RegisterDTO {
 	
 	private String email;
 	
-	private int territory;
+	private Territory territory;
 	
-	public RegisterDTO(){
+	private String picture;
+	
+	private boolean blocked;
+	
+	private boolean admin;
+	
+	public UserDTO(){
 		
 	}
 
-	public RegisterDTO(String username, String password, String firstName, String lastName, String phone, String email,
-			int territory) {
+	public UserDTO(String username, String firstName, String lastName, String phone, String email, Territory territory,
+			String picture, boolean blocked, boolean admin) {
 		super();
 		this.username = username;
-		this.password = password;
 		this.firstName = firstName;
 		this.lastName = lastName;
 		this.phone = phone;
 		this.email = email;
 		this.territory = territory;
+		this.picture = picture;
+		this.blocked = blocked;
+		this.admin = admin;
 	}
 
 	public String getUsername() {
@@ -40,14 +46,6 @@ public class RegisterDTO {
 
 	public void setUsername(String username) {
 		this.username = username;
-	}
-
-	public String getPassword() {
-		return password;
-	}
-
-	public void setPassword(String password) {
-		this.password = password;
 	}
 
 	public String getFirstName() {
@@ -82,11 +80,35 @@ public class RegisterDTO {
 		this.email = email;
 	}
 
-	public int getTerritory() {
+	public Territory getTerritory() {
 		return territory;
 	}
 
-	public void setTerritory(int territory) {
+	public void setTerritory(Territory territory) {
 		this.territory = territory;
+	}
+
+	public String getPicture() {
+		return picture;
+	}
+
+	public void setPicture(String picture) {
+		this.picture = picture;
+	}
+
+	public boolean isBlocked() {
+		return blocked;
+	}
+
+	public void setBlocked(boolean blocked) {
+		this.blocked = blocked;
+	}
+
+	public boolean isAdmin() {
+		return admin;
+	}
+
+	public void setAdmin(boolean admin) {
+		this.admin = admin;
 	}
 }

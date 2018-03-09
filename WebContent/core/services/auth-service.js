@@ -9,10 +9,27 @@
 			if(user === "undefined" || user === undefined){
 				return null;
 			}
-			return JSON.parse(user);
+			user = JSON.parse(user);
+			var d = new Date();
+			d.setHours(d.getHours() - 1);
+			if(new Date(user.accessTime) < d){
+				UserResource.getLoggedUser().then(function(response){
+					if(response === undefined){
+						$window.localStorage.removeItem("user");
+						$cookies.remove("JSESSIONID");
+						return null;
+					}
+					else{
+						retObj.saveUser(response);
+						return response;
+					}
+				});
+			}
+			return user;
 		}
 		
 		retObj.saveUser = function(user){
+			user.accessTime = new Date();
 			$window.localStorage["user"] = JSON.stringify(user);
 		}
 		
@@ -24,7 +41,9 @@
 		
 		retObj.login = function(user){
 			return UserResource.login(user).then(function(response){
-				console.log(response);
+				if(response === undefined){
+					return null;
+				}
 				retObj.saveUser(response);
 			});
 		};

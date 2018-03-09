@@ -42,9 +42,28 @@
 	
 	configFunction.$inject = ["$stateProvider", "$urlRouterProvider"];
 	
-	function runFunction(Restangular){
+	function runFunction(Restangular, $transitions, authentication, $location){
 		Restangular.setBaseUrl("rest");
+		
+		$transitions.onBefore({}, function(transition){
+			//console.log("before");
+			//console.log(transition.from().name);
+			//console.log(transition.to().name);
+			var user = authentication.getUser();
+			if(user === null && transition.to().name === "profile"){
+				//console.log("dasda");
+				//console.log(transition.router.urlRouter);
+				$location.path(transition.router.urlRouter.location);
+				return transition.router.stateService.target("root");
+			}
+		});
+		
+		$transitions.onError({}, function(transition){
+			//console.log("error");
+			//console.log(transition.from().name);
+			//console.log(transition.to().name);
+		});
 	}
 	
-	runFunction.$inject = ["Restangular"];
+	runFunction.$inject = ["Restangular", "$transitions", "authentication", "$location"];
 })(angular);

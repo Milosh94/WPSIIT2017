@@ -2,15 +2,24 @@
 	//Home navigation
 	app.controller("homeCtrl", home);
 	
-	function home(authentication, $state, $timeout, $uibModal, TerritoryResource){
+	function home(authentication, $state, $timeout, $uibModal, TerritoryResource, toastr, toastrConfig){
 		var vm = this;
 		
 		vm.user = authentication.getUser();
 		
 		vm.loginUser = {};
+		toastrConfig.maxOpened = 1;
 		vm.login = function(){
 			authentication.login(vm.loginUser).then(function(response){
-				vm.user = authentication.getUser();
+				if(response === null){
+					toastr.error("Wrong credentials!", "Error", {
+						closeButton: true,
+						timeout: 3000
+					});
+				}
+				else{
+					vm.user = authentication.getUser();
+				}
 			});
 		}
 		
@@ -26,6 +35,7 @@
 		vm.logout = function(){
 			authentication.logout();
 			vm.user = authentication.getUser();
+			$state.go("root");
 		}
 		
 		vm.territories = null;
@@ -57,7 +67,7 @@
 		}
 	}
 	
-	home.$inject = ["authentication", "$state", "$timeout", "$uibModal", "TerritoryResource"];
+	home.$inject = ["authentication", "$state", "$timeout", "$uibModal", "TerritoryResource", "toastr", "toastrConfig"];
 	
 	//Register modal
 	app.controller("registerCtrl", register);

@@ -1,0 +1,24 @@
+.profile-img{
+	height: 10%;
+}
+
+.background-grey{
+	background-color: #f3f3f4;
+	margin-top: 4%;
+	padding-top: 1%;
+}
+
+@media only screen and (max-width: 632px){
+	.profile-div{
+		padding-right: 0;
+	}
+}
+
+.profile-row{
+	margin-bottom: 1%;
+}
+
+.profile-update-button{
+	padding-top: 4%;
+	padding-bottom: 2%;
+}

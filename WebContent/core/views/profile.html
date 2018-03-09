@@ -1,25 +1,33 @@
-<div class="container-fluid">
+<div class="profile-div container-fluid">
 	<h3>Profile of {{vm.user.username}}</h3>
-	<div class="container-fluid">
-		<div class="row">
-			<div class="col-xs-2"><b>First name:</b></div>
-			<div class="col-xs-10">{{vm.user.firstName}}</div>
+	<img class="profile-img" ng-src="http://localhost:8080/WPSIIT2017/images/users/{{vm.user.picture}}" ng-if="vm.user.picture.trim() !== ''" alt="No image"/>
+	<img class="profile-img" src="http://localhost:8080/WPSIIT2017/images/web/no-image.png" ng-if="vm.user.picture.trim() === ''" alt="No image"/>
+	<div class="background-grey">
+		<h3>Personal informations</h3>
+		<div class="container-fluid">
+			<div class="profile-row row">
+				<div class="col-xs-2"><b>First name:</b></div>
+				<div class="col-xs-10">{{vm.user.firstName}}</div>
+			</div>
+			<div class="profile-row row">
+				<div class="col-xs-2"><b>Last name:</b></div>
+				<div class="col-xs-10">{{vm.user.lastName}}</div>
+			</div>
+			<div class="profile-row row">
+				<div class="col-xs-2"><b>Phone:</b></div>
+				<div class="col-xs-10">{{vm.user.phone}}</div>
+			</div>
+			<div class="profile-row row">
+				<div class="col-xs-2"><b>Email:</b></div>
+				<div class="col-xs-10">{{vm.user.email}}</div>
+			</div>
+			<div class="profile-row row">
+				<div class="col-xs-2"><b>Territory:</b></div>
+				<div class="col-xs-10">{{vm.user.territory.name}}</div>
+			</div>
 		</div>
-		<div class="row">
-			<div class="col-xs-2"><b>Last name:</b></div>
-			<div class="col-xs-10">{{vm.user.lastName}}</div>
-		</div>
-		<div class="row">
-			<div class="col-xs-2"><b>Phone:</b></div>
-			<div class="col-xs-10">{{vm.user.phone}}</div>
-		</div>
-		<div class="row">
-			<div class="col-xs-2"><b>Email:</b></div>
-			<div class="col-xs-10">{{vm.user.email}}</div>
-		</div>
-		<div class="row">
-			<div class="col-xs-2"><b>Territory:</b></div>
-			<div class="col-xs-10">{{vm.user.territory.name}}</div>
+		<div class="profile-update-button container-fluid">
+			<button class="btn btn-primary" ng-click="vm.updateProfile()"><i class="fas fa-pencil-alt"></i> Update</button>
 		</div>
 	</div>
 </div>

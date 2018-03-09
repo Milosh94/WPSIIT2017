@@ -1,0 +1,80 @@
+<div class="modal-header">
+	<h3 class="modal-title">Update profile</h3>
+</div>
+<div class="modal-body" ng-form="vm.profileForm">
+	<div class="form-group">
+		<label>Username</label>
+		<input class="form-control" ng-model="vm.user.username" type="text" disabled/>
+	</div>
+	<div class="form-group">
+		<label>Change password</label>
+		<button type="button" class="btn btn-primary" ng-class="{'btn-primary': !vm.showPassword, 'btn-default': vm.showPassword}" ng-click="vm.changePassword()">{{vm.changeHide}}</button>
+	</div>
+	<div class="form-group" ng-if="vm.showPassword" ng-class="{'has-error': vm.profileForm.oldPassword.$invalid}">
+		<label for="oldPassword">Old password</label>
+		<input name="oldPassword" id="oldPassword" type="password" ng-model="vm.oldPassword" ng-change="vm.oldPasswordChanged(vm.profileForm.oldPassword.$invalid)" class="form-control"/>
+		<div ng-messages="vm.profileForm.oldPassword.$error" class="help-block">
+			<p ng-message="passwordRequired">Old password is required</p>
+			<p ng-message="wrongPassword">Old password is wrong</p>
+		</div>
+	</div>
+	<div class="form-group" ng-if="vm.showPassword" ng-class="{'has-error': vm.profileForm.newPassword.$invalid}">
+		<label for="newPassword">New password</label>
+		<input name="newPassword" id="newPassword" type="password" ng-model="vm.user.password" ng-change="vm.newPasswordChanged(vm.profileForm.newPassword.$invalid)" class="form-control"/>
+		<div ng-messages="vm.profileForm.newPassword.$error" class="help-block">
+			<p ng-message="passwordRequired">New password must not be empty</p>
+		</div>
+	</div>
+	<div class="form-group" ng-class="{'has-error': vm.profileForm.firstName.$invalid}">
+		<label for="firstName">First name</label>
+		<input name="firstName" id="firstName" type="text" ng-model="vm.user.firstName" class="form-control" required/>
+		<div ng-messages="vm.profileForm.firstName.$error" class="help-block">
+			<p ng-message="required">This filed is required</p>
+		</div>
+	</div>
+	<div class="form-group" ng-class="{'has-error': vm.profileForm.lastName.$invalid}">
+		<label for="lastName">Last name</label>
+		<input name="lastName" id="lastName" type="text" ng-model="vm.user.lastName" class="form-control" required/>
+		<div ng-messages="vm.profileForm.lastName.$error" class="help-block">
+			<p ng-message="required">This filed is required</p>
+		</div>
+	</div>
+	<div class="form-group" ng-class="{'has-error': vm.profileForm.phone.$invalid}">
+		<label for="phone">Phone</label>
+		<input name="phone" id="phone" type="text" ng-model="vm.user.phone" class="form-control" required/>
+		<div ng-messages="vm.profileForm.phone.$error" class="help-block">
+			<p ng-message="required">This field is required</p>
+		</div>
+	</div>
+	<div class="form-group" ng-class="{'has-error': vm.profileForm.email.$invalid}">
+		<label for="email">Email</label>
+		<input name="email" id="email" type="text" ng-model="vm.user.email" class="form-control" required/>
+		<div ng-messages="vm.profileForm.email.$error" class="help-block">
+			<p ng-message="required">This field is required</p>
+		</div>
+	</div>
+	<div class="form-group" ng-class="{'has-error': vm.profileForm.hiddenTerritory.$invalid}">
+		<label>Territory</label>
+		<ui-select ng-model="vm.user.territory">
+			<ui-select-match>{{$select.selected.name}}</ui-select-match>
+			<ui-select-choices repeat="t in vm.territories">
+				<span ng-bind="t.name"></span>
+			</ui-select-choices>
+		</ui-select>
+		<input ng-model="vm.user.territory" type="hidden" name="hiddenTerritory" class="form-control" required/>
+		<div ng-messages="vm.profileForm.hiddenTerritory.$error" class="help-block">
+			<p ng-message="required">This field is required</p>
+		</div>
+	</div>
+	<img id="profilePicture" src="images/web/no-image.png" ng-if="vm.user.picture.trim() === ''" alt="No image selected"/>
+	<img id="profilePicture" ng-src="images/users/{{vm.user.picture}}" ng-if="vm.user.picture.trim() !== ''" alt="No image selected"/>
+	<div class="form-group">
+   		<label for="profilePictureInput">Profile picture</label>
+   		<label class="btn btn-primary">Browse&hellip;<input type="file" id="profilePictureInput" accept="image/*" file-model="vm.file"/></label>
+   		<button id="profileRemoveButton" class="btn btn-danger" type="button" ng-click="vm.removeFile()" ng-style="{display: vm.user.picture.trim() !== '' ? 'unset' : 'none'}" remove-file>Remove</button>
+   	</div>
+</div>
+<div class="modal-footer">
+	<button class="btn btn-primary" ng-click="vm.updateProfile(vm.profileForm.$valid)" ng-disabled="vm.profileForm.$invalid"><i class="fas fa-pencil-alt"></i> Update</button>
+	<button class="btn btn-default" ng-click="vm.cancel()">Cancel</button>
+</div>
