@@ -1,0 +1,84 @@
+<div class="container-fluid">
+	<div class="row">
+		<div class="col-xs-12 col-sm-3 background-gray">
+			<h3>Search</h3>
+			<form name="vm.searchForm" ng-submit="vm.search()">
+				<div class="form-group">
+					<label for="emergencySituationName">Emergency situation name</label>
+					<input type="text" class="form-control" id="emergencySituationName" name="emergencySituationName" ng-model="vm.searchParams.emergencySituationName"/>
+				</div>
+				<div class="form-group">
+					<label for="districtName">District name</label>
+					<input type="text" class="form-control" id="districtName" name="districtName" ng-model="vm.searchParams.districtName"/>
+				</div>
+				<div class="form-group">
+					<label for="description">Description</label>
+					<input type="text" class="form-control" id="description" name="description" ng-model="vm.searchParams.description"/>
+				</div>
+				<div class="form-group">
+					<label for="volunteer">Volunteer</label>
+					<input type="text" placeholder="Username or first and last name..." class="form-control" id="volunteer" name="volunteer" ng-model="vm.searchParams.volunteer"/>
+				</div>
+				<div class="checkbox margin-bottom-15px" ng-if="vm.user.admin === true">
+					<label><input type="checkbox" ng-model="vm.searchParams.withoutVolunteer"/><b>Without assigned volunteer</b></label>
+				</div>
+				<div class="checkbox margin-bottom-15px">
+					<label><input type="checkbox" ng-model="vm.searchParams.newest" ng-change="vm.filterSituations()"/><b>Newest first</b></label>
+				</div>
+				<div class="margin-bottom-15px">
+					<b>Level of urgency</b>
+					<div ng-scrollbars ng-scrollbars-config="vm.configUrgency">
+						<div class="checkbox" ng-repeat="u in vm.urgencyLevels">
+							<label ng-class="{'color-red': u.name === 'Red', 'color-blue': u.name === 'Blue', 'color-orange': u.name === 'Orange'}"><input type="checkbox" ng-model="u.isChecked" ng-change="vm.filterSituations()"/>{{u.name}}</label>
+						</div>
+					</div>
+				</div>
+				<div class="margin-bottom-15px">
+					<b>Territories</b>
+					<div ng-scrollbars ng-scrollbars-config="vm.config">
+						<div class="checkbox" ng-repeat="t in vm.territories">
+							<label><input type="checkbox" ng-model="t.isChecked" ng-change="vm.filterSituations()"/>{{t.name}}</label>
+						</div>
+					</div>
+				</div>
+				<div class="margin-bottom-15px float-right">
+					<button type="submit" class="btn btn-primary"><i class="fas fa-search"></i> Search</button>
+					<button type="button" ng-click="vm.clear()" class="btn btn-danger"><i class="fas fa-times"></i> Clear</button>
+				</div>
+			</form>
+		</div>
+		<div class="hidden-xs col-sm-1"></div>
+		<div class="col-xs-12 col-sm-8">
+			<div class="table-responsive" ng-if="vm.emergencySituations.length !== 0">
+				<table class="table table-hover table-striped">
+					<thead>
+						<tr>
+							<th>No.</th>
+							<th>Name</th>
+							<th>District</th>
+							<th>Date</th>
+							<th>Territory</th>
+							<th>Level of urgency</th>
+							<th>Volunteer</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr class="change-cursor" ng-repeat="s in vm.pageSituations">
+							<td>{{$index + 1}}</td>
+							<td>{{s.name}}</td>
+							<td>{{s.district}}</td>
+							<td>{{s.dateTime}}</td>
+							<td>{{s.territoryName}}</td>
+							<td ng-class="{'color-red': s.urgentLevel === 'RED', 'color-blue': s.urgentLevel === 'BLUE', 'color-orange': s.urgentLevel === 'ORANGE'}">{{s.urgentLevel}}</td>
+							<td>{{s.volunteerName}}</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+			<div class="float-right" ng-if="vm.emergencySituations.length !== 0" uib-pagination total-items="vm.totalItems" ng-model="vm.currentPage" items-per-page="vm.itemsPerPage" max-size="vm.maxSize" class="pagination-sm" boundary-links="true" ng-change="vm.changePage()"></div>
+			<div class="container-fluid" ng-if="vm.emergencySituations.length === 0">
+				<h3>Found 0 emergency situations</h3>
+			</div>
+		</div>
+	</div>
+</div>

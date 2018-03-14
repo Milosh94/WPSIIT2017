@@ -25,6 +25,7 @@ public class TerritoryService {
 	private ServletContext context;
 	
 	@GET
+	@Path("")
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
 	public List<Territory> getTerritories(){

@@ -13,6 +13,12 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import javax.servlet.ServletContext;
+
+import dataRW.EmergencySituationsRW;
+import dataRW.TerritoriesRW;
+import dataRW.UsersRW;
+
 public class Utils {
 	
 	public static Date stringToDate(String s) throws ParseException{
@@ -53,5 +59,42 @@ public class Utils {
 
 	        e.printStackTrace();
 	    }
+	}
+	
+	public static boolean checkString(String s){
+		return s == null || s.trim().equals("");
+	}
+	
+	public static UsersRW getUsersRW(ServletContext context){
+		UsersRW users = (UsersRW)context.getAttribute("users");
+		if(users == null){
+			TerritoriesRW territories = getTerritoriesRW(context);
+			users = new UsersRW(territories.getTerritories());
+			users.readUsers(context.getRealPath(""));
+			context.setAttribute("users", users);
+		}
+		return users;
+	}
+	
+	public static TerritoriesRW getTerritoriesRW(ServletContext context){
+		TerritoriesRW territories = (TerritoriesRW)context.getAttribute("territories");
+		if(territories == null){
+			territories = new TerritoriesRW();
+			territories.readTerritories(context.getRealPath(""));
+			context.setAttribute("territories", territories);
+		}
+		return territories;
+	}
+	
+	public static EmergencySituationsRW getEmergencySituationsRW(ServletContext context){
+		EmergencySituationsRW situations = (EmergencySituationsRW)context.getAttribute("situations");
+		if(situations == null){
+			UsersRW users = getUsersRW(context);
+			TerritoriesRW territories = getTerritoriesRW(context);
+			situations = new EmergencySituationsRW(users.getUsers(), territories.getTerritories());
+			situations.readEmergencySituations(context.getRealPath(""));
+			context.setAttribute("situations", situations);
+		}
+		return situations;
 	}
 }

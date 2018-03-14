@@ -1,5 +1,5 @@
 (function(angular){
-	app = angular.module("EmergencySituationApp", ["ui.router", "restangular", "ui.bootstrap", "ngCookies", "ngMessages", "ui.select", "ngSanitize", "toastr"]);
+	app = angular.module("EmergencySituationApp", ["ui.router", "restangular", "ui.bootstrap", "ngCookies", "ngMessages", "ui.select", "ngSanitize", "toastr", "ngScrollbars"]);
 	
 	app.config(configFunction).run(runFunction);
 	
@@ -37,6 +37,27 @@
 						controllerAs: "vm"
 					}
 				}
+			})
+			.state("search", {
+				parent: "home",
+				views: {
+					"pageFragmentView@home": {
+						templateUrl: "core/views/search.html",
+						controller: "searchCtrl",
+						controllerAs: "vm"
+					}
+				}
+			})
+			.state("emergency-situations", {
+				parent: "home",
+				url: "my-emergency-situations",
+				views: {
+					"pageFragmentView@home": {
+						templateUrl: "core/views/my-emergency-situations.html",
+						controller: "myEmergencySituationsCtrl",
+						controllerAs: "vm"
+					}
+				}
 			});
 	}
 	
@@ -50,11 +71,17 @@
 			//console.log(transition.from().name);
 			//console.log(transition.to().name);
 			var user = authentication.getUser();
-			if(user === null && transition.to().name === "profile"){
+			if(user === null && (transition.to().name === "profile" || transition.to().name === "emergency-situations")){
 				//console.log("dasda");
 				//console.log(transition.router.urlRouter);
 				$location.path(transition.router.urlRouter.location);
-				return transition.router.stateService.target("root");
+				//return transition.router.stateService.target("root");
+				return false;
+			}
+			if( user!== null && user.admin === true && transition.to().name === "emergency-situations"){
+				$location.path(transition.router.urlRouter.location);
+				console.log(transition.router.urlRouter.location);
+				return false;
 			}
 		});
 		

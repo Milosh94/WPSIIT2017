@@ -148,6 +148,6 @@ public class EmergencySituation {
 	public String toFile(){
 		return this.id + "; " + this.name + "; " + this.district + "; " + this.description + "; " + Utils.dateToString(this.dateTime) + 
 				"; " + this.location + "; " + this.territory.getId() + "; " + this.urgentLevel.toString() + 
-				"; " + this.picture + "; " +this.status + "; " + this.volunteer.getId();
+				"; " + this.picture + "; " +this.status + "; " + (this.volunteer != null ? this.volunteer.getId() : -1);
 	}
 }

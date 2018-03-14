@@ -1,0 +1,64 @@
+.options-menu{
+	float: right;
+	margin-bottom: 5%;
+}
+
+.float-right{
+	float: right;
+}
+
+.margin-top-5{
+	margin-top: 5%;
+}
+
+.padding-right-10{
+	padding-right: 10%;
+}
+
+.button{
+	text-decoration: none;
+	color: rgba(3, 96, 193, 0.8);
+	background: rgb(255, 255, 255);
+	border: none;
+	font-size: 18px;
+	font-weight: 400;
+	transition: all 0.2s ease-in-out;
+	padding-right: 10px;
+	padding-left: 10px;
+}
+
+.button:hover{
+	color: rgba(3, 96, 193, 1);
+	box-shadow: 0 5px 4px -4px rgba(3, 96, 193, 0.4);
+	font-weight: 500;
+}
+
+.button:focus{
+	outline: none;
+}
+
+.button-active{
+	outline: none;
+	box-shadow: 0 5px 4px -4px rgba(3, 96, 193, 0.4);
+	font-weight: 500;
+}
+
+.margin-bottom-15px{
+	margin-bottom: 15px;
+}
+
+.background-gray{
+	background-color: #f3f3f4;
+}
+
+.color-red{
+	color: red;
+}
+
+.color-orange{
+	color: orange;
+}
+
+.color-blue{
+	color: blue;
+}

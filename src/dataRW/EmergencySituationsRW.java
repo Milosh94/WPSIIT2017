@@ -83,6 +83,7 @@ public class EmergencySituationsRW {
 				while(st.hasMoreTokens()){
 					id = Integer.parseInt(st.nextToken().trim());
 					emergencySituation.setId(id);
+					emergencySituation.setName(st.nextToken().trim());
 					emergencySituation.setDistrict(st.nextToken().trim());
 					emergencySituation.setDescription(st.nextToken().trim());
 					emergencySituation.setDateTime(Utils.stringToDate(st.nextToken().trim()));
@@ -94,7 +95,12 @@ public class EmergencySituationsRW {
 					userId = Integer.parseInt(st.nextToken().trim());
 				}
 				emergencySituation.setTerritory(territories.get(territoryId));
-				emergencySituation.setVolunteer(users.get(userId));
+				if(userId == -1){
+					emergencySituation.setVolunteer(null);
+				}
+				else{
+					emergencySituation.setVolunteer(users.get(userId));
+				}
 				this.emergencySituations.put(id, emergencySituation);
 			}
 		}catch(Exception e){

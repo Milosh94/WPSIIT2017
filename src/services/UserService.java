@@ -24,7 +24,6 @@ import org.glassfish.jersey.media.multipart.FormDataParam;
 
 import beans.Territory;
 import beans.User;
-import dataRW.TerritoriesRW;
 import dataRW.UsersRW;
 import dto.LoginDTO;
 import dto.RegisterDTO;
@@ -51,7 +50,7 @@ public class UserService {
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
 	public UserDTO login(LoginDTO login){
-		for(User user : getUsersRW().getUsers().values()){
+		for(User user : Utils.getUsersRW(context).getUsers().values()){
 			if(user.getUsername().trim().equals(login.getUsername()) && user.getPassword().trim().equals(login.getPassword())){
 				request.getSession().setAttribute("user", user);
 				UserDTO userDTO = new UserDTO(user.getUsername(), user.getFirstName(), user.getLastName(), user.getPhone(), user.getEmail(),
@@ -82,7 +81,7 @@ public class UserService {
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response check(@QueryParam("username") String username){
-		for(User user : getUsersRW().getUsers().values()){
+		for(User user : Utils.getUsersRW(context).getUsers().values()){
 			if(user.getUsername().equals(username)){
 				return Response.status(Status.OK).entity("{\"exists\": true}").build();
 			}
@@ -101,32 +100,32 @@ public class UserService {
 			@FormDataParam("user") FormDataBodyPart jsonPart){
 		jsonPart.setMediaType(MediaType.APPLICATION_JSON_TYPE);
 		RegisterDTO registerDTO = jsonPart.getValueAs(RegisterDTO.class);
-		if(checkString(registerDTO.getUsername()) || checkString(registerDTO.getFirstName()) || checkString(registerDTO.getLastName())
-				|| checkString(registerDTO.getEmail()) || checkString(registerDTO.getPhone())){
+		if(Utils.checkString(registerDTO.getUsername()) || Utils.checkString(registerDTO.getFirstName()) || Utils.checkString(registerDTO.getLastName())
+				|| Utils.checkString(registerDTO.getEmail()) || Utils.checkString(registerDTO.getPhone())){
 			return Response.status(Status.BAD_REQUEST).build();
 		}
 		if(registerDTO.getPassword() == null || registerDTO.getPassword().equals("")){
 			return Response.status(Status.BAD_REQUEST).build();
 		}
-		for(User user : getUsersRW().getUsers().values()){
+		for(User user : Utils.getUsersRW(context).getUsers().values()){
 			if(user.getUsername().equals(registerDTO.getUsername())){
 				return Response.status(Status.BAD_REQUEST).build();
 			}
 		}
-		Territory t = getTerritoriesRW().getTerritories().get(registerDTO.getTerritory());
+		Territory t = Utils.getTerritoriesRW(context).getTerritories().get(registerDTO.getTerritory());
 		if(t == null){
 			return Response.status(Status.BAD_REQUEST).build();
 		}
 		User user = new User();
-		user.setId(getUsersRW().getUsers().size() + 1);
+		user.setId(Utils.getUsersRW(context).getUsers().size() + 1);
 		user.setAdmin(false);
 		user.setBlocked(false);
-		user.setUsername(registerDTO.getUsername());
+		user.setUsername(registerDTO.getUsername().trim().replaceAll("\\s+", " "));
 		user.setPassword(registerDTO.getPassword());
-		user.setFirstName(registerDTO.getFirstName());
-		user.setLastName(registerDTO.getLastName());
-		user.setPhone(registerDTO.getPhone());
-		user.setEmail(registerDTO.getEmail());
+		user.setFirstName(registerDTO.getFirstName().trim().replaceAll("\\s+", " "));
+		user.setLastName(registerDTO.getLastName().trim().replaceAll("\\s+", " "));
+		user.setPhone(registerDTO.getPhone().trim());
+		user.setEmail(registerDTO.getEmail().trim());
 		user.setTerritory(t);
 		String fileName = fileDetails.getFileName();
 		if(fileName != null && !fileName.trim().equals("")){
@@ -139,7 +138,7 @@ public class UserService {
 		else{
 			user.setPicture("");
 		}
-		UsersRW usersRW = getUsersRW();
+		UsersRW usersRW = Utils.getUsersRW(context);
 		usersRW.getUsers().put(user.getId(), user);
 		usersRW.writeUsers(context.getRealPath(""));
 		context.setAttribute("users", usersRW);
@@ -178,8 +177,8 @@ public class UserService {
 		}
 		jsonPart.setMediaType(MediaType.APPLICATION_JSON_TYPE);
 		RegisterDTO registerDTO = jsonPart.getValueAs(RegisterDTO.class);
-		if(checkString(registerDTO.getUsername()) || checkString(registerDTO.getFirstName()) || checkString(registerDTO.getLastName())
-				|| checkString(registerDTO.getEmail()) || checkString(registerDTO.getPhone())){
+		if(Utils.checkString(registerDTO.getUsername()) || Utils.checkString(registerDTO.getFirstName()) || Utils.checkString(registerDTO.getLastName())
+				|| Utils.checkString(registerDTO.getEmail()) || Utils.checkString(registerDTO.getPhone())){
 			return Response.status(Status.BAD_REQUEST).build();
 		}
 		if(registerDTO.getPassword() == null || oldPassword == null){
@@ -189,7 +188,7 @@ public class UserService {
 			return Response.status(Status.BAD_REQUEST).entity("{\"wrongPassword\": true}").build();
 		}
 		boolean userExists = false;
-		for(User user : getUsersRW().getUsers().values()){
+		for(User user : Utils.getUsersRW(context).getUsers().values()){
 			if(user.getUsername().equals(u.getUsername())){
 				userExists = true;
 				break;
@@ -198,7 +197,7 @@ public class UserService {
 		if(!userExists){
 			return Response.status(Status.BAD_REQUEST).build();
 		}
-		Territory t = getTerritoriesRW().getTerritories().get(registerDTO.getTerritory());
+		Territory t = Utils.getTerritoriesRW(context).getTerritories().get(registerDTO.getTerritory());
 		if(t == null){
 			return Response.status(Status.BAD_REQUEST).build();
 		}
@@ -208,10 +207,10 @@ public class UserService {
 		if(u.getPassword().equals(oldPassword) && !registerDTO.getPassword().equals("")){
 			u.setPassword(registerDTO.getPassword());
 		}
-		u.setEmail(registerDTO.getEmail());
-		u.setFirstName(registerDTO.getFirstName());
-		u.setLastName(registerDTO.getLastName());
-		u.setPhone(registerDTO.getPhone());
+		u.setEmail(registerDTO.getEmail().trim());
+		u.setFirstName(registerDTO.getFirstName().trim().replaceAll("\\s+", " "));
+		u.setLastName(registerDTO.getLastName().trim().replaceAll("\\s+", " "));
+		u.setPhone(registerDTO.getPhone().trim());
 		u.setTerritory(t);
 		String fileName = fileDetails.getFileName();
 		if(fileName != null && !fileName.trim().equals("") && changePicture == true){
@@ -226,7 +225,7 @@ public class UserService {
 				u.setPicture("");
 			}
 		}
-		UsersRW usersRW = getUsersRW();
+		UsersRW usersRW = Utils.getUsersRW(context);
 		usersRW.getUsers().put(u.getId(), u);
 		usersRW.writeUsers(context.getRealPath(""));
 		context.setAttribute("users", usersRW);
@@ -234,35 +233,5 @@ public class UserService {
 		UserDTO userDTO = new UserDTO(u.getUsername(), u.getFirstName(), u.getLastName(), u.getPhone(), u.getEmail(),
 				u.getTerritory(), u.getPicture(), u.isBlocked(), u.isAdmin());
 		return Response.status(Status.OK).entity(userDTO).build();
-	}
-	
-	private UsersRW getUsersRW(){
-		UsersRW users = (UsersRW)context.getAttribute("users");
-		if(users == null){
-			TerritoriesRW territories = (TerritoriesRW)context.getAttribute("territories");
-			if(territories == null){
-				territories = new TerritoriesRW();
-				territories.readTerritories(context.getRealPath(""));
-				context.setAttribute("territories", territories);
-			}
-			users = new UsersRW(territories.getTerritories());
-			users.readUsers(context.getRealPath(""));
-			context.setAttribute("users", users);
-		}
-		return users;
-	}
-	
-	private TerritoriesRW getTerritoriesRW(){
-		TerritoriesRW territories = (TerritoriesRW)context.getAttribute("territories");
-		if(territories == null){
-			territories = new TerritoriesRW();
-			territories.readTerritories(context.getRealPath(""));
-			context.setAttribute("territories", territories);
-		}
-		return territories;
-	}
-	
-	private boolean checkString(String s){
-		return s == null || s.trim().equals("");
 	}
 }

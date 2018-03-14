@@ -1,2 +1,14 @@
-<div>
+<div class="container-fluid margin-top-5 padding-right-10">
+	<div class="button-group options-menu">
+		<!-- Unregistered user options -->
+		<button type="button" class="button" ng-class="{'button-active': vm.activeButton === 1}" ng-click="vm.activeButton = 1" ui-sref="search">Home</button>
+		<button type="button" class="button" ng-class="{'button-active': vm.activeButton === 2}" ng-click="vm.report(vm.activeButton)">Report</button>
+		<!-- Volunteer options -->
+		<button type="button" class="button" ng-if="vm.user.admin === false" ng-class="{'button-active': vm.activeButton === 3}" ng-click="vm.activeButton = 3" ui-sref="emergency-situations">My emergency situations</button>
+		<!-- Admin options -->
+		<button type="button" class="button" ng-if="vm.user.admin === true" ng-class="{'button-active': vm.activeButton === 4}" ng-click="vm.activeButton = 4" ui-sref="volunteers">Volunteers</button>
+		<button type="button" class="button" ng-if="vm.user.admin === true" ng-class="{'button-active': vm.activeButton === 5}" ng-click="vm.activeButton = 5" ui-sref="territories">Territories</button>
+	</div>
+	<div class="clearfix"></div>
+	<div ui-view="pageFragmentView"></div>
 </div>

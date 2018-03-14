@@ -1,1 +1,2 @@
 1; pera; pera; Pera; Peric; 555-555; pera@gmail.com; 1; Koala.jpg; false; false
+2; zika; zika; Zika; Zikic; 333-555; zika@gmail.com; 1; Koala.jpg; false; true
