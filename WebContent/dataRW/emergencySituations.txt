@@ -1,5 +1,5 @@
-1; emergency 1; disctrict 1; description 1; 2018-03-11 12:12:12; location 1; 1; RED; picture 1; true; 1
-2; emergency 2; disctrict 2; description 2; 2018-02-11 12:12:12; location 2; 2; ORANGE; picture 2; true; 2
-3; emergency 3; disctrict 3; description 3; 2018-01-11 12:12:12; location 3; 3; BLUE; picture 3; true; 1
-4; emergency 4; disctrict 2; description 4; 2018-03-10 12:12:12; location 4; 3; RED; picture 4; false; 2
-5; emergency 5; disctrict 1; description 5; 2018-03-15 12:12:12; location 5; 3; BLUE; picture 5; true; 1
+1; emergency 1; disctrict 1; description 1; 2018-03-11 12:12:12; location 1; number 1; coordinates 1; 1; RED; picture 1; 1; 1
+2; emergency 2; disctrict 2; description 2; 2018-02-11 12:12:12; location 2; number 2; coordinates 2; 2; ORANGE; picture 2; 1; 2
+3; emergency 3; disctrict 3; description 3; 2018-01-11 12:12:12; location 3; number 3; coordinates 3; 3; BLUE; picture 3; 1; 1
+4; emergency 4; disctrict 2; description 4; 2018-03-10 12:12:12; location 4; number 4; coordinates 4; 3; RED; picture 4; -1; 2
+5; emergency 5; disctrict 1; description 5; 2018-03-15 12:12:12; location 5; number 5; coordinates 5; 3; BLUE; picture 5; 1; 1

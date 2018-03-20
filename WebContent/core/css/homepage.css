@@ -62,3 +62,7 @@
 .color-blue{
 	color: blue;
 }
+
+.pac-container{
+	z-index: 1051;
+}

@@ -3,6 +3,7 @@
 	
 	function focusFunction(){
 		return{
+			restrict: "A",
 			scope: {
 				trigger: "=focusField"
 			},

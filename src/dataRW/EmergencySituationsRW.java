@@ -88,10 +88,12 @@ public class EmergencySituationsRW {
 					emergencySituation.setDescription(st.nextToken().trim());
 					emergencySituation.setDateTime(Utils.stringToDate(st.nextToken().trim()));
 					emergencySituation.setLocation(st.nextToken().trim());
+					emergencySituation.setStreetNumber(st.nextToken().trim());
+					emergencySituation.setLocationCoordinates(st.nextToken().trim());
 					territoryId = Integer.parseInt(st.nextToken().trim());
 					emergencySituation.setUrgentLevel(UrgentLevel.valueOf(st.nextToken().trim()));
 					emergencySituation.setPicture(st.nextToken().trim());
-					emergencySituation.setStatus(Boolean.parseBoolean(st.nextToken().trim()));
+					emergencySituation.setStatus(Integer.parseInt(st.nextToken().trim()));
 					userId = Integer.parseInt(st.nextToken().trim());
 				}
 				emergencySituation.setTerritory(territories.get(territoryId));

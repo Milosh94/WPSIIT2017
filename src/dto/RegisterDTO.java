@@ -1,7 +1,5 @@
 package dto;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-
 public class RegisterDTO {
 	
 	private String username;

@@ -2,6 +2,78 @@
 	<h3 class="modal-title">Report emergency situation</h3>
 </div>
 <div class="modal-body">
+	<form name="vm.reportForm" novalidate>
+		<div class="form-group" ng-class="{'has-error': vm.reportForm.situationName.$touched && vm.reportForm.situationName.$invalid}">
+			<label for="situationName">Emergency situation name</label>
+			<input type="text" ng-model="vm.report.situationName" name="situationName" id="situationName" class="form-control" input-validation required/>
+			<div ng-messages="vm.reportForm.situationName.$error" class="help-block" ng-show="vm.reportForm.situationName.$touched">
+				<p ng-message="required">This field is required</p>
+			</div>
+		</div>
+		<div class="form-group" ng-class="{'has-error': vm.reportForm.district.$touched && vm.reportForm.district.$invalid}">
+			<label for="district">District</label>
+			<input type="text" ng-model="vm.report.district" name="district" id="district" class="form-control" input-validation required/>
+			<div ng-messages="vm.reportForm.district.$error" class="help-block" ng-show="vm.reportForm.district.$touched">
+				<p ng-message="required">This field is required</p>
+			</div>
+		</div>
+		<div class="form-group">
+			<label for="description">Description</label><sup><i>optional</i></sup>
+			<textarea ng-model="vm.report.description" name="description" id="description" class="form-control" rows="5" input-validation></textarea>
+		</div>
+		<div class="form-group">
+			<label>Level of urgency</label><br/>
+			<label class="radio-inline color-red"><input type="radio" name="urgencyLevel" ng-model="vm.report.urgencyLevel" value="Red">Red</label>
+			<label class="radio-inline color-blue"><input type="radio" name="urgencyLevel" ng-model="vm.report.urgencyLevel" value="Blue">Blue</label>
+			<label class="radio-inline color-orange"><input type="radio" name="urgencyLevel" ng-model="vm.report.urgencyLevel" value="Orange">Orange</label>
+		</div>
+		<div class="form-group" ng-class="{'has-error': vm.reportForm.selectTerritory.$touched && vm.reportForm.hiddenTerritory.$invalid}">
+			<label>Territory</label>
+			<ui-select ng-model="vm.report.territory" name="selectTerritory">
+				<ui-select-match>{{$select.selected.name}}</ui-select-match>
+				<ui-select-choices repeat="t in vm.territories | filter: {name: $select.search}">
+					<span ng-bind="t.name"></span>
+				</ui-select-choices>
+			</ui-select>
+			<input type="hidden" name="hiddenTerritory" class="form-control" ng-model="vm.report.territory" required/>
+			<div class="help-block" ng-messages="vm.reportForm.hiddenTerritory.$error" ng-show="vm.reportForm.selectTerritory.$touched">
+				<p ng-message="required">This field is required</p>
+			</div>
+		</div>
+		<fieldset class="form-group">
+			<legend>Location<sup><i>optional</i></sup></legend>
+			<div class="form-group">
+				<label>State</label>
+				<ui-select ng-model="vm.report.state" ng-change="vm.changeCountry(vm.reportForm.address)">
+					<ui-select-match allow-clear="true">{{$select.selected.name}}</ui-select-match>
+					<ui-select-choices repeat="s in vm.states | filter: {name: $select.search}">
+						<span ng-bind="s.name"></span>
+					</ui-select-choices>
+				</ui-select>
+			</div>
+			<div class="row" ng-show="vm.report.state">
+				<div class="form-group col-xs-8" ng-class="{'has-error': vm.reportForm.address.$touched && vm.reportForm.address.$invalid}">
+					<label>Address</label>
+					<input type="text" class="form-control" id="addressInput" ng-model="vm.report.address" name="address" address-autocomplete="vm.report.address" input-validation required>
+					<div class="help-block" ng-messages="vm.reportForm.address.$error" ng-show="vm.reportForm.address.$touched">
+						<p ng-message="required">This field is required</p>
+					</div>
+				</div>
+				<div class="form-group col-xs-4">
+					<label>Street number<sup><i>optional</i></sup></label>
+					<input type="text" class="form-control" ng-model="vm.report.streetNumber" input-validation>
+				</div>
+			</div>
+		</fieldset>
+		<img id="profilePicture" src="images/web/no-image.png" alt="No image selected"/>
+  		<div class="form-group">
+     		<label for="profilePictureInput">Picture from location</label>
+     		<label class="btn btn-primary">Browse&hellip;<input type="file" id="profilePictureInput" accept="image/*" file-model="vm.file"/></label>
+     		<button id="profileRemoveButton" class="btn btn-danger" type="button" ng-click="vm.removeFile()" remove-file>Remove</button>
+   		</div>
+	</form>
 </div>
 <div class="modal-footer">
+	<button class="btn btn-primary" ng-click="vm.sendReport(vm.reportForm.$valid, vm.reportForm)">Report</button>
+	<button class="btn btn-default" ng-click="vm.cancel()">Cancel</button>
 </div>

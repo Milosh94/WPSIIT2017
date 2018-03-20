@@ -19,13 +19,17 @@ public class EmergencySituation {
 	
 	private String location;
 	
+	private String streetNumber;
+	
+	private String locationCoordinates;
+	
 	private Territory territory;
 	
 	private UrgentLevel urgentLevel;
 	
 	private String picture;
 	
-	private boolean status;
+	private int status;
 	
 	private User volunteer;
 	
@@ -34,7 +38,8 @@ public class EmergencySituation {
 	}
 
 	public EmergencySituation(int id, String name, String district, String description, Date dateTime, String location,
-			Territory territory, UrgentLevel urgentLevel, String picture, boolean status, User volunteer) {
+			String streetNumber, String locationCoordinates, Territory territory, UrgentLevel urgentLevel,
+			String picture, int status, User volunteer) {
 		super();
 		this.id = id;
 		this.name = name;
@@ -42,6 +47,8 @@ public class EmergencySituation {
 		this.description = description;
 		this.dateTime = dateTime;
 		this.location = location;
+		this.streetNumber = streetNumber;
+		this.locationCoordinates = locationCoordinates;
 		this.territory = territory;
 		this.urgentLevel = urgentLevel;
 		this.picture = picture;
@@ -121,11 +128,11 @@ public class EmergencySituation {
 		this.picture = picture;
 	}
 
-	public boolean isStatus() {
+	public int getStatus() {
 		return status;
 	}
 
-	public void setStatus(boolean status) {
+	public void setStatus(int status) {
 		this.status = status;
 	}
 
@@ -135,6 +142,22 @@ public class EmergencySituation {
 
 	public void setVolunteer(User volunteer) {
 		this.volunteer = volunteer;
+	}
+
+	public String getStreetNumber() {
+		return streetNumber;
+	}
+
+	public void setStreetNumber(String streetNumber) {
+		this.streetNumber = streetNumber;
+	}
+
+	public String getLocationCoordinates() {
+		return locationCoordinates;
+	}
+
+	public void setLocationCoordinates(String locationCoordinates) {
+		this.locationCoordinates = locationCoordinates;
 	}
 
 	@Override
@@ -147,7 +170,7 @@ public class EmergencySituation {
 	
 	public String toFile(){
 		return this.id + "; " + this.name + "; " + this.district + "; " + this.description + "; " + Utils.dateToString(this.dateTime) + 
-				"; " + this.location + "; " + this.territory.getId() + "; " + this.urgentLevel.toString() + 
+				"; " + this.location + "; " + this.streetNumber + "; " + this.locationCoordinates + "; " + this.territory.getId() + "; " + this.urgentLevel.toString() + 
 				"; " + this.picture + "; " +this.status + "; " + (this.volunteer != null ? this.volunteer.getId() : -1);
 	}
 }

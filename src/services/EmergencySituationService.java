@@ -1,7 +1,10 @@
 package services;
 
+import java.io.InputStream;
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -10,6 +13,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.BeanParam;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
+import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
@@ -17,10 +21,18 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
+import org.glassfish.jersey.media.multipart.FormDataBodyPart;
+import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
+import org.glassfish.jersey.media.multipart.FormDataParam;
+
 import beans.EmergencySituation;
+import beans.Territory;
 import beans.User;
+import dataRW.EmergencySituationsRW;
 import dto.EmergencySituationSimpleDTO;
+import dto.ReportDTO;
 import dto.SearchDTO;
+import util.UrgentLevel;
 import util.Utils;
 
 @Path("")
@@ -51,7 +63,7 @@ public class EmergencySituationService {
 		}
 		List<EmergencySituation> result = new ArrayList<EmergencySituation>();
 		for(EmergencySituation s : Utils.getEmergencySituationsRW(context).getEmergencySituations().values()){
-			if(s.isStatus() == false){
+			if(s.getStatus() != 1){
 				continue;
 			}
 			if(search.isWithoutVolunteer() == true){
@@ -141,5 +153,68 @@ public class EmergencySituationService {
 			);
 		}).collect(Collectors.toList());
 		return Response.status(Status.OK).entity(resultTransformed).build();
+	}
+	
+	/*
+	 * Report situation
+	 */
+	@POST
+	@Path("/report")
+	@Consumes(MediaType.MULTIPART_FORM_DATA)
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response report(@FormDataParam("file") InputStream uploadedInputStream, @FormDataParam("file") FormDataContentDisposition fileDetails, 
+			@FormDataParam("report") FormDataBodyPart jsonPart) throws UnsupportedEncodingException{
+		jsonPart.setMediaType(MediaType.APPLICATION_JSON_TYPE);
+		ReportDTO reportDTO = jsonPart.getValueAs(ReportDTO.class);
+		if(Utils.checkString(reportDTO.getSituationName()) || Utils.checkString(reportDTO.getDistrict()) || Utils.checkString(reportDTO.getUrgencyLevel())
+				|| Utils.checkReportFieldString(reportDTO.getDescription()) || Utils.checkReportFieldString(reportDTO.getLocation()) 
+				|| Utils.checkReportFieldString(reportDTO.getLocationCoordinates()) || Utils.checkReportFieldString(reportDTO.getStreetNumber())){
+			return Response.status(Status.BAD_REQUEST).build();
+		}
+		boolean exists = false;
+		UrgentLevel urgencyLevel = null;
+		for(int i = 0; i < UrgentLevel.values().length; i++){
+			if(UrgentLevel.values()[i].toString().equalsIgnoreCase(reportDTO.getUrgencyLevel())){
+				exists = true;
+				urgencyLevel = UrgentLevel.values()[i];
+				break;
+			}
+		}
+		if(exists == false){
+			return Response.status(Status.BAD_REQUEST).build();
+		}
+		Territory t = Utils.getTerritoriesRW(context).getTerritories().get(reportDTO.getTerritory());
+		if(t == null){
+			return Response.status(Status.BAD_REQUEST).build();
+		}
+		EmergencySituation situation = new EmergencySituation();
+		situation.setId(Utils.getEmergencySituationsRW(context).getEmergencySituations().size() + 1);
+		situation.setName(reportDTO.getSituationName().trim().replaceAll("\\s+", " "));
+		situation.setDescription(reportDTO.getDescription().trim().replaceAll("\\s+", " "));
+		situation.setDistrict(reportDTO.getDistrict().trim().replaceAll("\\s+", " "));
+		situation.setLocation(reportDTO.getLocation().trim().replaceAll("\\s+", " "));
+		situation.setLocationCoordinates(reportDTO.getLocationCoordinates());
+		situation.setStreetNumber(reportDTO.getStreetNumber());
+		situation.setStatus(0);
+		situation.setUrgentLevel(urgencyLevel);
+		situation.setDateTime(new Date());
+		situation.setTerritory(t);
+		situation.setVolunteer(null);
+		String fileName = fileDetails.getFileName();
+		if(fileName != null && !fileName.trim().equals("")){
+			long filestamp = (new Date()).getTime();
+			fileName = filestamp + "_" + fileDetails.getFileName();
+			situation.setPicture(fileName);
+			String uploadedFileLocation = Utils.getSituationsImagesFilePath(context.getRealPath("")) + fileName;
+			Utils.saveToFile(uploadedInputStream, uploadedFileLocation);
+		}
+		else{
+			situation.setPicture("");
+		}
+		EmergencySituationsRW emergencySituationsRW = Utils.getEmergencySituationsRW(context);
+		emergencySituationsRW.getEmergencySituations().put(situation.getId(), situation);
+		emergencySituationsRW.writeEmergencySituations(context.getRealPath(""));
+		context.setAttribute("situations", emergencySituationsRW);
+		return Response.status(Status.OK).build();
 	}
 }

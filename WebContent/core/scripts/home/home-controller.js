@@ -140,6 +140,7 @@
 			}
 			else{
 				form.username.$setTouched();
+				form.selectTerritory.$setTouched();
 				angular.forEach(form.$error, function (field) {
 			        angular.forEach(field, function(errorField){
 			            errorField.$setTouched();
@@ -158,7 +159,7 @@
 	//homepage ctrl
 	app.controller("homepageCtrl", homepage);
 	
-	function homepage(authentication, $timeout, $state, $uibModal){
+	function homepage(authentication, $timeout, $state, $uibModal, toastr, toastrConfig){
 		var vm = this;
 		
 		vm.user = authentication.getUser();
@@ -172,15 +173,22 @@
 				controller: "reportSituationModalCtrl",
 				controllerAs: "vm"
 			});
+			toastrConfig.maxOpened = 1;
 			modalInstance.result.then(function(success){
 				vm.activeButton = current;
+				if(success !== "close"){
+					toastr.success("Emergency situation reported", "Success", {
+						closeButton: true,
+						timeout: 3000
+					});
+				}
 			}, function(error){
 				vm.activeButton = current;
 			});
 		}
 	}
 	
-	homepage.$inject = ["authentication", "$timeout", "$state", "$uibModal"];
+	homepage.$inject = ["authentication", "$timeout", "$state", "$uibModal", "toastr", "toastrConfig"];
 	
 	//homepage search ctrl
 	app.controller("searchCtrl", search);

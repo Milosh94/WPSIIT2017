@@ -5,19 +5,19 @@
 			<form name="vm.searchForm" ng-submit="vm.search()">
 				<div class="form-group">
 					<label for="emergencySituationName">Emergency situation name</label>
-					<input type="text" class="form-control" id="emergencySituationName" name="emergencySituationName" ng-model="vm.searchParams.emergencySituationName"/>
+					<input type="text" class="form-control" id="emergencySituationName" name="emergencySituationName" ng-model="vm.searchParams.emergencySituationName" input-validation/>
 				</div>
 				<div class="form-group">
 					<label for="districtName">District name</label>
-					<input type="text" class="form-control" id="districtName" name="districtName" ng-model="vm.searchParams.districtName"/>
+					<input type="text" class="form-control" id="districtName" name="districtName" ng-model="vm.searchParams.districtName" input-validation/>
 				</div>
 				<div class="form-group">
 					<label for="description">Description</label>
-					<input type="text" class="form-control" id="description" name="description" ng-model="vm.searchParams.description"/>
+					<input type="text" class="form-control" id="description" name="description" ng-model="vm.searchParams.description" input-validation/>
 				</div>
 				<div class="form-group">
 					<label for="volunteer">Volunteer</label>
-					<input type="text" placeholder="Username or first and last name..." class="form-control" id="volunteer" name="volunteer" ng-model="vm.searchParams.volunteer"/>
+					<input type="text" placeholder="Username or first and last name..." class="form-control" id="volunteer" name="volunteer" ng-model="vm.searchParams.volunteer" input-validation/>
 				</div>
 				<div class="checkbox margin-bottom-15px" ng-if="vm.user.admin === true">
 					<label><input type="checkbox" ng-model="vm.searchParams.withoutVolunteer"/><b>Without assigned volunteer</b></label>

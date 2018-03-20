@@ -38,10 +38,12 @@ public class Utils {
 		return new String(encoded, StandardCharsets.UTF_8);
 	}
 	
-	public static String getImagesFilePath(){
-		String filePath = System.getProperty("catalina.base");
-		filePath = filePath + File.separator + "webapps" + File.separator + "WPSIIT2017" + File.separator + "images" + File.separator + "users" + File.separator;
-		return filePath;
+	public static String getImagesFilePath(String path){
+		return path + File.separator + "images" + File.separator + "users" + File.separator;
+	}
+	
+	public static String getSituationsImagesFilePath(String path){
+		return path + File.separator + "images" + File.separator + "emergency-situations" + File.separator;
 	}
 	
 	public static void saveToFile(InputStream uploadedInputStream, String uploadedFileLocation) {
@@ -62,7 +64,11 @@ public class Utils {
 	}
 	
 	public static boolean checkString(String s){
-		return s == null || s.trim().equals("");
+		return s == null || s.trim().equals("") || s.contains(";") || s.contains(System.getProperty("line.separator"));
+	}
+	
+	public static boolean checkReportFieldString(String s){
+		return s == null || s.contains(";") || s.contains(System.getProperty("line.separator"));
 	}
 	
 	public static UsersRW getUsersRW(ServletContext context){
@@ -96,5 +102,18 @@ public class Utils {
 			context.setAttribute("situations", situations);
 		}
 		return situations;
+	}
+	
+	public static String escapeString(String s){
+		StringBuilder b = new StringBuilder();
+
+	    for (char c : s.toCharArray()) {
+	        if (c >= 128)
+	            b.append("\\u").append(String.format("%04X", (int) c));
+	        else
+	            b.append(c);
+	    }
+
+	    return b.toString();
 	}
 }

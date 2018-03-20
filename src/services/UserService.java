@@ -104,7 +104,8 @@ public class UserService {
 				|| Utils.checkString(registerDTO.getEmail()) || Utils.checkString(registerDTO.getPhone())){
 			return Response.status(Status.BAD_REQUEST).build();
 		}
-		if(registerDTO.getPassword() == null || registerDTO.getPassword().equals("")){
+		if(registerDTO.getPassword() == null || registerDTO.getPassword().equals("") || registerDTO.getPassword().contains(";") 
+				|| registerDTO.getPassword().contains(System.getProperty("line.separator"))){
 			return Response.status(Status.BAD_REQUEST).build();
 		}
 		for(User user : Utils.getUsersRW(context).getUsers().values()){
@@ -132,7 +133,7 @@ public class UserService {
 			long filestamp = (new Date()).getTime();
 			fileName = filestamp + "_" + fileDetails.getFileName();
 			user.setPicture(fileName);
-			String uploadedFileLocation = Utils.getImagesFilePath() + fileName;
+			String uploadedFileLocation = Utils.getImagesFilePath(context.getRealPath("")) + fileName;
 			Utils.saveToFile(uploadedInputStream, uploadedFileLocation);
 		}
 		else{
@@ -181,7 +182,8 @@ public class UserService {
 				|| Utils.checkString(registerDTO.getEmail()) || Utils.checkString(registerDTO.getPhone())){
 			return Response.status(Status.BAD_REQUEST).build();
 		}
-		if(registerDTO.getPassword() == null || oldPassword == null){
+		if(registerDTO.getPassword() == null || oldPassword == null || registerDTO.getPassword().contains(";") || oldPassword.contains(";") 
+				|| registerDTO.getPassword().contains(System.getProperty("line.separator")) || oldPassword.contains(System.getProperty("line.separator"))){
 			return Response.status(Status.BAD_REQUEST).build();
 		}
 		if(!u.getPassword().equals(oldPassword) && !oldPassword.equals("")){
@@ -217,7 +219,7 @@ public class UserService {
 			long filestamp = (new Date()).getTime();
 			fileName = filestamp + "_" + fileDetails.getFileName();
 			u.setPicture(fileName);
-			String uploadedFileLocation = Utils.getImagesFilePath() + fileName;
+			String uploadedFileLocation = Utils.getImagesFilePath(context.getRealPath("")) + fileName;
 			Utils.saveToFile(uploadedInputStream, uploadedFileLocation);
 		}
 		else{
