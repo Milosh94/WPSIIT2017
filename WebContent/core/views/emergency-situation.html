@@ -1,0 +1,94 @@
+<div class="container-fluid" ng-show="vm.situation !== undefined">
+	<h3>Emergency situation {{vm.situation.name}}</h3>
+	<img class="situation-img" ng-src="http://localhost:8080/WPSIIT2017/images/emergency-situations/{{vm.situation.picture}}" ng-if="vm.situation.picture.trim() !== ''" alt="No image"/>
+	<img class="situation-img" src="http://localhost:8080/WPSIIT2017/images/web/no-image.png" ng-if="vm.situation.picture.trim() === ''" alt="No image"/>
+	<div class="background-grey">
+		<h3 class="padding-left-15px">Informations</h3>
+		<div class="container-fluid">
+			<div class="profile-row row">
+				<div class="col-xs-2"><b>Situation name:</b></div>
+				<div class="col-xs-4">{{vm.situation.name}}</div>
+				<div class="col-xs-2"><b>Created:</b></div>
+				<div class="col-xs-4">{{vm.situation.dateTime}}</div>
+			</div>
+			<div class="profile-row row">
+				<div class="col-xs-2"><b>District:</b></div>
+				<div class="col-xs-4">{{vm.situation.district}}</div>
+				<div class="col-xs-2"><b>Level of urgency:</b></div>
+				<div class="col-xs-4" ng-class="{'color-red': vm.situation.urgentLevel === 'RED', 'color-blue': vm.situation.urgentLevel === 'BLUE', 'color-orange': uvn.situation.urgentLevel === 'ORANGE'}"><b>{{vm.situation.urgentLevel}}</b></div>
+			</div>
+			<div class="profile-row row" ng-if="vm.situation.description.trim() !== ''">
+				<div class="col-xs-2"><b>Description:</b></div>
+				<div class="col-xs-10">{{vm.situation.description}}</div>
+			</div>
+			<div class="profile-row row">
+				<div class="col-xs-2"><b>Territory:</b></div>
+				<div class="col-xs-10">{{vm.situation.territory.name}}</div>
+			</div>
+			<div class="profile-row row" ng-if="vm.situation.volunteer !== null">
+				<div class="col-xs-2"><b>Volunteer username:</b></div>
+				<div class="col-xs-10">{{vm.situation.volunteer.username}}</div>
+			</div>
+			<div class="profile-row row" ng-if="vm.situation.volunteer !== null">
+				<div class="col-xs-2"><b>First name:</b></div>
+				<div class="col-xs-4">{{vm.situation.volunteer.firstName}}</div>
+				<div class="col-xs-2"><b>Last name:</b></div>
+				<div class="col-xs-4">{{vm.situation.volunteer.lastName}}</div>
+			</div>
+			<div class="profile-row row" ng-if="vm.situation.volunteer === null">
+				<div class="col-xs-2"><b>Volunteer:</b></div>
+				<div class="col-xs-10">No one has been selected for this emergency situation</div>
+			</div>
+			<div class="profile-row row" ng-if="vm.situation.location.trim() !== ''">
+				<div class="col-xs-2"><b>Location:</b></div>
+				<div class="col-xs-4">{{vm.situation.location}}</div>
+				<div class="col-xs-2" ng-if="vm.situation.streetNumber.trim() !== ''"><b>Street number:</b></div>
+				<div class="col-xs-4" ng-if="vm.situation.streetNumber.trim() !== ''">{{vm.situation.streetNumber}}</div>
+			</div>
+		</div>
+		<div class="map-border">
+			<div id="map" show-map show-map-location="vm.situation.location" show-map-coordinates="vm.situation.locationCoordinates"></div>
+		</div>
+		<div class="container-fluid margin-top-5" ng-if="vm.situation.status === 1">
+			<h4 class="margin-left-1">Comments: {{vm.situation.comments.length}}</h4>
+			<div class="row margin-all-1 background-white" ng-repeat="c in vm.situation.comments" ng-if="vm.situation.comments.length < 5">
+				<div class="col-xs-2 col-lg-1 comment-group">
+					<img class="comment-img" ng-src="http://localhost:8080/WPSIIT2017/images/users/{{c.user.picture}}" ng-if="c.user.picture !== ''" alt="No image"/>
+					<img class="comment-img" src="http://localhost:8080/WPSIIT2017/images/web/no-image.png" ng-if="c.user.picture === ''" alt="No image"/>
+					<p><b>{{c.user.username}}</b></p>
+				</div>
+				<div class="col-xs-10 col-lg-11 comment-border">
+					<div class="margin-bottom-1"><small><i>Posted on {{c.dateTime}}</i></small></div>
+					<div ng-scrollbars ng-scrollbars-config="vm.config" class="pre-line">
+						{{c.text}}
+					</div>
+				</div>
+			</div>
+			<div ng-scrollbars ng-scrollbars-config="vm.configComments" ng-if="vm.situation.comments.length >= 5">
+				<div class="row margin-all-1 background-white" ng-repeat="c in vm.situation.comments">
+					<div class="col-xs-2 col-lg-1 comment-group">
+						<img class="comment-img" ng-src="http://localhost:8080/WPSIIT2017/images/users/{{c.user.picture}}" ng-if="c.user.picture !== ''" alt="No image"/>
+						<img class="comment-img" src="http://localhost:8080/WPSIIT2017/images/web/no-image.png" ng-if="c.user.picture === ''" alt="No image"/>
+						<p><b>{{c.user.username}}</b></p>
+					</div>
+					<div class="col-xs-10 col-lg-11 comment-border">
+						<div class="margin-bottom-1"><small><i>Posted on {{c.dateTime}}</i></small></div>
+						<div ng-scrollbars ng-scrollbars-config="vm.config" class="pre-line">
+							{{c.text}}
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="comment-div form-group" ng-if="vm.user !== undefined && vm.user !== null">
+				<h5>Post a comment</h5>
+				<textarea class="comment-area form-control" rows="5" placeholder="Write a text..." name="comment" ng-model="vm.comment"></textarea>
+				<button class="btn btn-success float-right margin-top-1" type="button" ng-click="vm.postComment()">Comment</button>
+			</div>
+		</div>
+		<div class="profile-update-button container-fluid">
+			<button class="btn btn-primary" ng-click="vm.changeVolunteer()" ng-if="vm.user !== null && vm.user.admin === true && vm.situation.status !== -1"><i class="fas fa-pencil-alt"></i> Change volunteer</button>
+			<button class="btn btn-success" ng-click="vm.publishSituation()" ng-if="vm.user !== null && vm.user.admin === true && vm.situation.status === 0"><i class="fas fa-sign-in-alt"></i> Publish</button>
+			<button class="btn btn-danger" ng-click="vm.archiveSituation()" ng-if="vm.user !== null && vm.user.admin === true && vm.situation.status !== -1"><i class="fas fa-times"></i> Archive</button>
+		</div>
+	</div>
+</div>

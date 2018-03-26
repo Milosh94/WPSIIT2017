@@ -2,16 +2,17 @@ package beans;
 
 import java.util.Date;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 import util.Utils;
 
 public class Comment {
 
 	private int id;
 
-	private int textId;
-	
 	private String text;
 	
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
 	private Date dateTime;
 	
 	private User user;
@@ -22,10 +23,9 @@ public class Comment {
 		
 	}
 
-	public Comment(int id, int textId, String text, Date dateTime, User user, EmergencySituation emergencySituation) {
+	public Comment(int id, String text, Date dateTime, User user, EmergencySituation emergencySituation) {
 		super();
 		this.id = id;
-		this.textId = textId;
 		this.text = text;
 		this.dateTime = dateTime;
 		this.user = user;
@@ -71,22 +71,14 @@ public class Comment {
 	public void setEmergencySituation(EmergencySituation emergencySituation) {
 		this.emergencySituation = emergencySituation;
 	}
-	
-	public int getTextId() {
-		return textId;
-	}
-
-	public void setTextId(int textId) {
-		this.textId = textId;
-	}
 
 	@Override
 	public String toString() {
-		return "Comment [id=" + id + ", textId=" + textId + ", text=" + text + ", dateTime=" + dateTime + ", user="
+		return "Comment [id=" + id + ", text=" + text + ", dateTime=" + dateTime + ", user="
 				+ user + ", emergencySituation=" + emergencySituation + "]";
 	}
 
 	public String toFile(){
-		return this.id + "; " + this.textId + "; " + Utils.dateToString(this.dateTime) + "; " + this.user.getId() + "; " + this.emergencySituation.getId();
+		return this.id + "; " + Utils.dateToString(this.dateTime) + "; " + this.user.getId() + "; " + this.emergencySituation.getId();
 	}
 }

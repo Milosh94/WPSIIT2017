@@ -12,6 +12,8 @@
 			user = JSON.parse(user);
 			var d = new Date();
 			d.setHours(d.getHours() - 1);
+			console.log(d);
+			console.log(user.accessTime);
 			if(new Date(user.accessTime) < d){
 				UserResource.getLoggedUser().then(function(response){
 					if(response === undefined){
@@ -25,7 +27,9 @@
 					}
 				});
 			}
-			return user;
+			else{
+				return user;
+			}
 		}
 		
 		retObj.saveUser = function(user){

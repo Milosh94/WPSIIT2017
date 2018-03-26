@@ -56,9 +56,6 @@ public class CommentsRW {
 		this.users = users;
 	}
 
-	/*
-	 *  this.id + "; " + this.textId + "; " + Utils.dateToString(this.dateTime) + "; " + this.user.getId() + "; " + this.emergencySituation;
-	 */
 	public HashMap<Integer, Comment> readComments(String path){
 		BufferedReader in = null;
 		try{
@@ -75,14 +72,11 @@ public class CommentsRW {
 				st = new StringTokenizer(line, ";");
 				Comment comment = new Comment();
 				int id = -1;
-				int textId = -1;
 				int emergencySituationId = -1;
 				int userId = -1;
 				while(st.hasMoreTokens()){
 					id = Integer.parseInt(st.nextToken().trim());
 					comment.setId(id);
-					textId = Integer.parseInt(st.nextToken().trim());
-					comment.setTextId(textId);
 					comment.setDateTime(Utils.stringToDate(st.nextToken().trim()));
 					userId = Integer.parseInt(st.nextToken().trim());
 					emergencySituationId = Integer.parseInt(st.nextToken().trim());

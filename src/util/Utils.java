@@ -15,6 +15,7 @@ import java.util.Date;
 
 import javax.servlet.ServletContext;
 
+import dataRW.CommentsRW;
 import dataRW.EmergencySituationsRW;
 import dataRW.TerritoriesRW;
 import dataRW.UsersRW;
@@ -102,6 +103,18 @@ public class Utils {
 			context.setAttribute("situations", situations);
 		}
 		return situations;
+	}
+	
+	public static CommentsRW getCommentsRW(ServletContext context){
+		CommentsRW comments = (CommentsRW)context.getAttribute("comments");
+		if(comments == null){
+			UsersRW users = getUsersRW(context);
+			EmergencySituationsRW situations = getEmergencySituationsRW(context);
+			comments = new CommentsRW(situations.getEmergencySituations(), users.getUsers());
+			comments.readComments(context.getRealPath(""));
+			context.setAttribute("comments", comments);
+		}
+		return comments;
 	}
 	
 	public static String escapeString(String s){

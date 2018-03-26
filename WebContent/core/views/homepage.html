@@ -8,6 +8,7 @@
 		<!-- Admin options -->
 		<button type="button" class="button" ng-if="vm.user.admin === true" ng-class="{'button-active': vm.activeButton === 4}" ng-click="vm.activeButton = 4" ui-sref="volunteers">Volunteers</button>
 		<button type="button" class="button" ng-if="vm.user.admin === true" ng-class="{'button-active': vm.activeButton === 5}" ng-click="vm.activeButton = 5" ui-sref="territories">Territories</button>
+		<button type="button" class="button" ng-if="vm.user.admin === true" ng-class="{'button-active': vm.activeButton === 6}" ng-click="vm.activeButton = 6" ui-sref="publish">Publish</button>
 	</div>
 	<div class="clearfix"></div>
 	<div ui-view="pageFragmentView"></div>

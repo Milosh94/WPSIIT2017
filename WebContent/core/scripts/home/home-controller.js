@@ -19,7 +19,7 @@
 				}
 				else{
 					vm.user = authentication.getUser();
-					$state.go("root", {}, {reload: true});
+					$state.go($state.current, {}, {reload: true});
 				}
 			});
 		}
@@ -36,7 +36,7 @@
 		vm.logout = function(){
 			authentication.logout();
 			vm.user = authentication.getUser();
-			$state.go("root", {}, {reload: true});
+			$state.go($state.current, {}, {reload: true});
 		}
 		
 		vm.territories = null;
@@ -62,7 +62,7 @@
 		}
 
 		$timeout(function(){
-			$state.go("search");
+			$state.go("home");
 		})
 	}
 	
@@ -159,7 +159,7 @@
 	//homepage ctrl
 	app.controller("homepageCtrl", homepage);
 	
-	function homepage(authentication, $timeout, $state, $uibModal, toastr, toastrConfig){
+	function homepage(authentication, $timeout, $state, $uibModal, toastr, toastrConfig, $window){
 		var vm = this;
 		
 		vm.user = authentication.getUser();
@@ -181,14 +181,47 @@
 						closeButton: true,
 						timeout: 3000
 					});
+					if(vm.activeButton === 6){
+						$state.go("publish");
+					}
 				}
 			}, function(error){
 				vm.activeButton = current;
 			});
 		}
+		
+		vm.statesList = {
+			"search": 1,
+			"emergency-situations": 3,
+			"volunteers": 4,
+			"territories": 5,
+			"publish": 6
+		};		
+		for(var i in vm.statesList){
+			if(i === $state.params.fragmentId){
+				vm.activeButton = vm.statesList[i];
+				break;
+			}
+		}
+		if($state.params.fragmentId === "emergency-situation"){
+			vm.activeButton = 0;
+		}
+		$timeout(function(){
+			for(var i in vm.statesList){
+				if(i === $state.params.fragmentId){
+					vm.activeButton = vm.statesList[i];
+					$state.go(i);
+					break;
+				}
+			}
+			if($state.params.fragmentId === "emergency-situation"){
+				vm.activeButton = 0;
+				$state.go("emergency-situation", {situationId: $state.params.situationId});
+			}
+		});
 	}
 	
-	homepage.$inject = ["authentication", "$timeout", "$state", "$uibModal", "toastr", "toastrConfig"];
+	homepage.$inject = ["authentication", "$timeout", "$state", "$uibModal", "toastr", "toastrConfig", "$window"];
 	
 	//homepage search ctrl
 	app.controller("searchCtrl", search);

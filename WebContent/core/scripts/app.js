@@ -19,6 +19,10 @@
 			})
 			.state("home", {
 				parent: "root",
+				params: {
+					fragmentId: "search",
+					situationId: null
+				},
 				views: {
 					"homepageView@root": {
 						templateUrl: "core/views/homepage.html",
@@ -58,30 +62,72 @@
 						controllerAs: "vm"
 					}
 				}
+			})
+			.state("publish", {
+				parent: "home",
+				url: "publish",
+				views: {
+					"pageFragmentView@home": {
+						templateUrl: "core/views/publish.html",
+						controller: "publishCtrl",
+						controllerAs: "vm"
+					}
+				}
+			})
+			.state("emergency-situation", {
+				parent: "home",
+				url: "emergency-situation/{situationId:int}",
+				views: {
+					"pageFragmentView@home": {
+						templateUrl: "core/views/emergency-situation.html",
+						controller: "emergencySituationCtrl",
+						controllerAs: "vm"
+					}
+				}
 			});
 	}
 	
 	configFunction.$inject = ["$stateProvider", "$urlRouterProvider"];
 	
-	function runFunction(Restangular, $transitions, authentication, $location){
+	function runFunction(Restangular, $transitions, authentication, $location, $state){
 		Restangular.setBaseUrl("rest");
+		
+		//UPDATEEEEEEEEEEEEEEEEEEEEEEEE
+		var statesList = ["search", "emergency-situations", "publish"];
 		
 		$transitions.onBefore({}, function(transition){
 			//console.log("before");
-			//console.log(transition.from().name);
-			//console.log(transition.to().name);
+			console.log(transition.from().name);
+			console.log(transition.to().name);
 			var user = authentication.getUser();
-			if(user === null && (transition.to().name === "profile" || transition.to().name === "emergency-situations")){
-				//console.log("dasda");
+			if(user === null && (transition.to().name === "profile" || transition.to().name === "emergency-situations" || transition.to().name === "publish")){
+				if(transition.from().name === "" || transition.from().name === "profile" || transition.from().name === "emergency-situations" || transition.from().name === "publish"){
+					return $state.target("home", {fragmentId: "search"});
+				}
+				else{
+					$location.path(transition.router.urlRouter.location);
+					return false;
+				}
 				//console.log(transition.router.urlRouter);
-				$location.path(transition.router.urlRouter.location);
 				//return transition.router.stateService.target("root");
+				
+			}
+			if(user !== null && user.admin === false && transition.to().name === "publish"){
+				$location.path(transition.router.urlRouter.location);
 				return false;
 			}
-			if( user!== null && user.admin === true && transition.to().name === "emergency-situations"){
+			if(user!== null && user.admin === true && transition.to().name === "emergency-situations"){
 				$location.path(transition.router.urlRouter.location);
-				console.log(transition.router.urlRouter.location);
 				return false;
+			}
+			for(var i = 0; i < statesList.length; i++){
+				if(transition.from().name !== "home" && transition.to().name === statesList[i]){
+					return $state.target("home", {fragmentId: statesList[i]}, {location: false, reload: "home"});
+				}
+			}
+			if(transition.from().name !== "home" && transition.to().name === "emergency-situation"){
+				console.log(transition.params());
+				return $state.target("home", {fragmentId: "emergency-situation", situationId: transition.params().situationId}, {location: false, reload: "home"});
 			}
 		});
 		
@@ -92,5 +138,5 @@
 		});
 	}
 	
-	runFunction.$inject = ["Restangular", "$transitions", "authentication", "$location"];
+	runFunction.$inject = ["Restangular", "$transitions", "authentication", "$location", "$state"];
 })(angular);

@@ -57,11 +57,7 @@ public class EmergencySituationsRW {
 	public void setTerritories(HashMap<Integer, Territory> territories) {
 		this.territories = territories;
 	}
-	/*
-	 * this.id + "; " + this.name + "; " + this.district + "; " + this.description + "; " + Utils.dateToString(this.dateTime) + 
-				"; " + this.location + "; " + this.territory.getId() + "; " + this.urgentLevel.toString() + 
-				"; " + this.picture + "; " +this.status + "; " + this.volunteer.getId();
-	 */
+	
 	public HashMap<Integer, EmergencySituation> readEmergencySituations(String path){
 		BufferedReader in = null;
 		try{

@@ -1,6 +1,10 @@
 package beans;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
 
 import util.UrgentLevel;
 import util.Utils;
@@ -15,6 +19,7 @@ public class EmergencySituation {
 	
 	private String description;
 	
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
 	private Date dateTime;
 	
 	private String location;
@@ -33,13 +38,15 @@ public class EmergencySituation {
 	
 	private User volunteer;
 	
+	private List<Comment> comments;
+	
 	public EmergencySituation(){
-		
+		this.comments = new ArrayList<Comment>();
 	}
 
 	public EmergencySituation(int id, String name, String district, String description, Date dateTime, String location,
 			String streetNumber, String locationCoordinates, Territory territory, UrgentLevel urgentLevel,
-			String picture, int status, User volunteer) {
+			String picture, int status, User volunteer, List <Comment> comments) {
 		super();
 		this.id = id;
 		this.name = name;
@@ -54,6 +61,7 @@ public class EmergencySituation {
 		this.picture = picture;
 		this.status = status;
 		this.volunteer = volunteer;
+		this.comments = comments;
 	}
 
 	public int getId() {
@@ -158,6 +166,14 @@ public class EmergencySituation {
 
 	public void setLocationCoordinates(String locationCoordinates) {
 		this.locationCoordinates = locationCoordinates;
+	}
+
+	public List<Comment> getComments() {
+		return comments;
+	}
+
+	public void setComments(List<Comment> comments) {
+		this.comments = comments;
 	}
 
 	@Override

@@ -1,0 +1,35 @@
+<div class="modal-header">
+	<h3 class="modal-title">Change volunteer</h3>
+</div>
+<div class="modal-body" ng-form="vm.changeForm">
+	<h4 ng-if="vm.volunteer !== null">Currently volunteer</h4>
+	<h4 ng-if="vm.volunteer === null">Currently without volunteer</h4>
+	<div class="form-group" ng-if="vm.volunteer !== null">
+		<label>Username</label>
+		<input type="text" ng-model="vm.volunteer.username" class="form-control" disabled>
+	</div>
+	<div class="form-group" ng-if="vm.volunteer !== null">
+		<label>First name</label>
+		<input type="text" ng-model="vm.volunteer.firstName" class="form-control" disabled>
+	</div>
+	<div class="form-group" ng-if="vm.volunteer !== null">
+		<label>Last name</label>
+		<input type="text" ng-model="vm.volunteer.lastName" class="form-control" disabled>
+	</div>
+	<div class="form-group">
+		<button class="btn btn-danger" ng-click="vm.removeVolunteer()" ng-if="vm.volunteer !== null">Remove volunteer</button>
+	</div>
+	<div class="form-group">
+		<label>Select new volunteer</label>
+		<ui-select ng-model="vm.selectedVolunteer">
+			<ui-select-match allow-clear="true" placeholder="Select volunteer by username...">{{$select.selected.username}}</ui-select-match>
+			<ui-select-choices repeat="t in vm.volunteers | filter: {username: $select.search}">
+				<span ng-bind="t.username"></span>
+			</ui-select-choices>
+		</ui-select>
+	</div>
+</div>
+<div class="modal-footer">
+	<button class="btn btn-primary" ng-click="vm.change()">Change</button>
+	<button class="btn btn-danger" ng-click="vm.cancel()">Cancel</button>
+</div>
