@@ -178,6 +178,9 @@ public class UserService {
 		if(u == null){
 			return Response.status(Status.EXPECTATION_FAILED).build();
 		}
+		if(u.isBlocked() == true){
+			return Response.status(Status.FORBIDDEN).build();
+		}
 		jsonPart.setMediaType(MediaType.APPLICATION_JSON_TYPE);
 		RegisterDTO registerDTO = jsonPart.getValueAs(RegisterDTO.class);
 		if(Utils.checkString(registerDTO.getUsername()) || Utils.checkString(registerDTO.getFirstName()) || Utils.checkString(registerDTO.getLastName())

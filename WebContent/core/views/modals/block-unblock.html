@@ -1,0 +1,15 @@
+<div class="modal-header">
+	<h3 class="modal-title" ng-if="vm.block === true">Block volunteer</h3>
+	<h3 class="modal-title" ng-if="vm.block === false">Unblock volunteer</h3>
+</div>
+<div class="modal-body" ng-if="vm.block === true">
+	Are you sure you want to block this volunteer?
+</div>
+<div class="modal-body" ng-if="vm.block === false">
+	Are you sure you want to unblock this volunteer?
+</div>
+<div class="modal-footer">
+	<button class="btn btn-primary" ng-click="vm.yes()" ng-if="vm.block === true">Block</button>
+	<button class="btn btn-primary" ng-click="vm.yes()" ng-if="vm.block === false">Unblock</button>
+	<button class="btn btn-danger" ng-click="vm.cancel()">Cancel</button>
+</div>

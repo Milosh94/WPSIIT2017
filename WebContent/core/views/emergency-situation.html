@@ -79,7 +79,7 @@
 					</div>
 				</div>
 			</div>
-			<div class="comment-div form-group" ng-if="vm.user !== undefined && vm.user !== null">
+			<div class="comment-div form-group" ng-if="vm.user !== undefined && vm.user !== null && vm.user.blocked === false">
 				<h5>Post a comment</h5>
 				<textarea class="comment-area form-control" rows="5" placeholder="Write a text..." name="comment" ng-model="vm.comment"></textarea>
 				<button class="btn btn-success float-right margin-top-1" type="button" ng-click="vm.postComment()">Comment</button>

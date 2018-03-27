@@ -26,7 +26,7 @@
 				<div class="col-xs-10">{{vm.user.territory.name}}</div>
 			</div>
 		</div>
-		<div class="profile-update-button container-fluid">
+		<div class="profile-update-button container-fluid" ng-if="vm.user.blocked === false">
 			<button class="btn btn-primary" ng-click="vm.updateProfile()"><i class="fas fa-pencil-alt"></i> Update</button>
 		</div>
 	</div>

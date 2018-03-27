@@ -11,6 +11,7 @@
 		</div>
 		<div class="collapse navbar-collapse" uib-collapse="navbarCollapsed">
 			<ul class="nav navbar-nav navbar-right">
+				<li ng-if="vm.user !== null && vm.user.blocked === true"><a id="red-color"><i class="fas fa-ban" aria-hidden="true"></i> Blocked</a></li>
 				<li ng-if="vm.user !== null"><a ui-sref="profile" class="change-cursor"><i class="fas fa-user" aria-hidden="true"></i> {{vm.user.username}}</a></li>
 				<li ng-if="vm.user !== null"><a ng-click="vm.logout()" class="change-cursor"><i class="fas fa-sign-out-alt" aria-hidden="true"></i> Logout</a></li>
 				<li ng-if="vm.user === null" class="dropdown" uib-dropdown auto-close="outsideClick" ng-init="dropdownCollapsed=false" is-open="dropdownCollapsed" on-toggle="vm.clearInputs(vm.loginForm)">

@@ -84,6 +84,28 @@
 						controllerAs: "vm"
 					}
 				}
+			})
+			.state("volunteers", {
+				parent: "home",
+				url: "volunteers",
+				views: {
+					"pageFragmentView@home": {
+						templateUrl: "core/views/volunteers.html",
+						controller: "volunteersCtrl",
+						controllerAs: "vm"
+					}
+				}
+			})
+			.state("territories", {
+				parent: "home",
+				url: "territories",
+				views: {
+					"pageFragmentView@home": {
+						templateUrl: "core/views/territories.html",
+						controller: "territoriesCtrl",
+						controllerAs: "vm"
+					}
+				}
 			});
 	}
 	
@@ -93,15 +115,24 @@
 		Restangular.setBaseUrl("rest");
 		
 		//UPDATEEEEEEEEEEEEEEEEEEEEEEEE
-		var statesList = ["search", "emergency-situations", "publish"];
+		var statesList = ["search", "emergency-situations", "publish", "volunteers", "territories"];
+		
+		var profileTransition = false;
 		
 		$transitions.onBefore({}, function(transition){
 			//console.log("before");
 			console.log(transition.from().name);
 			console.log(transition.to().name);
 			var user = authentication.getUser();
-			if(user === null && (transition.to().name === "profile" || transition.to().name === "emergency-situations" || transition.to().name === "publish")){
-				if(transition.from().name === "" || transition.from().name === "profile" || transition.from().name === "emergency-situations" || transition.from().name === "publish"){
+			//console.log(user);
+			if(profileTransition === true){
+				profileTransition = false;
+				return false;
+			}
+			if(user === null && (transition.to().name === "profile" || transition.to().name === "emergency-situations" || transition.to().name === "publish" 
+				|| transition.to().name === "volunteers" || transition.to().name === "territories")){
+				if(transition.from().name === "" || transition.from().name === "profile" || transition.from().name === "emergency-situations" || transition.from().name === "publish" 
+					|| transition.to().name === "volunteers" || transition.to().name === "territories"){
 					return $state.target("home", {fragmentId: "search"});
 				}
 				else{
@@ -112,7 +143,11 @@
 				//return transition.router.stateService.target("root");
 				
 			}
-			if(user !== null && user.admin === false && transition.to().name === "publish"){
+			if(user !== null && user.admin === false && (transition.to().name === "publish" || transition.to().name === "volunteers" || transition.to().name === "territories")){
+				$location.path(transition.router.urlRouter.location);
+				return false;
+			}
+			if(user !== null && user.admin === false && user.blocked === true && transition.to().name === "emergency-situations"){
 				$location.path(transition.router.urlRouter.location);
 				return false;
 			}
@@ -126,15 +161,20 @@
 				}
 			}
 			if(transition.from().name !== "home" && transition.to().name === "emergency-situation"){
-				console.log(transition.params());
 				return $state.target("home", {fragmentId: "emergency-situation", situationId: transition.params().situationId}, {location: false, reload: "home"});
+			}
+			if(transition.from().name !== "" && transition.from().name !== "root" && transition.to().name === "root"){
+				return $state.target("home", {fragmentId: "search"}, {reload: "home"});
+			}
+			if(transition.from().name === "" && transition.to().name === "profile"){
+				profileTransition = true;
 			}
 		});
 		
 		$transitions.onError({}, function(transition){
-			//console.log("error");
-			//console.log(transition.from().name);
-			//console.log(transition.to().name);
+			console.log("error");
+			console.log(transition.from().name);
+			console.log(transition.to().name);
 		});
 	}
 	

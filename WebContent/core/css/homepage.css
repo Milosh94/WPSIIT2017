@@ -137,3 +137,13 @@
 .margin-top-15{
 	margin-top: 15%;
 }
+
+@media only screen and (min-width: 768px){
+	#search-volunteers-input{
+		width: 300px;
+	}
+}
+
+#font-size-18px{
+	font-size: 18px;
+}

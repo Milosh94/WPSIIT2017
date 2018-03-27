@@ -171,6 +171,10 @@ public class EmergencySituationService {
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response report(@FormDataParam("file") InputStream uploadedInputStream, @FormDataParam("file") FormDataContentDisposition fileDetails, 
 			@FormDataParam("report") FormDataBodyPart jsonPart) throws UnsupportedEncodingException{
+		User user = (User)request.getSession().getAttribute("user");
+		if(user != null && user.isBlocked() == true){
+			return Response.status(Status.FORBIDDEN).build();
+		}
 		jsonPart.setMediaType(MediaType.APPLICATION_JSON_TYPE);
 		ReportDTO reportDTO = jsonPart.getValueAs(ReportDTO.class);
 		if(Utils.checkString(reportDTO.getSituationName()) || Utils.checkString(reportDTO.getDistrict()) || Utils.checkString(reportDTO.getUrgencyLevel())

@@ -1,0 +1,41 @@
+<div class="container-fluid" ng-if="vm.volunteers !== undefined">
+	<form class="form-inline" ng-submit="vm.searchVolunteers()">
+		<div class="form-group">
+			<label id="font-size-18px">Search volunteers</label>
+			<input type="text" class="form-control" id="search-volunteers-input" ng-model="vm.searchName" placeholder="Username or first and last name..." input-validation/>
+			<button type="submit" class="btn btn-primary"><i class="fas fa-search"></i> Search</button>
+		</div>
+	</form>
+	<div class="table-responsive" ng-if="vm.volunteers.length !== 0">
+		<table class="table table-hover table-striped">
+			<thead>
+				<tr>
+					<th>No.</th>
+					<th>Username</th>
+					<th>First name</th>
+					<th>Last name</th>
+					<th>Territory</th>
+					<th>Status</th>
+					<th>Block/Unblock</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr class="change-cursor" ng-repeat="s in vm.pageVolunteers">
+					<td>{{$index + 1}}</td>
+					<td>{{s.username}}</td>
+					<td>{{s.firstName}}</td>
+					<td>{{s.lastName}}</td>
+					<td>{{s.territory.name}}</td>
+					<td ng-if="s.blocked === true">Blocked</td>
+					<td ng-if="s.blocked === false">Active</td>
+					<td ng-if="s.blocked === true"><button class="btn btn-primary" ng-click="vm.blockUnblock(s, $index, false)">Unblock</button></td>
+					<td ng-if="s.blocked === false"><button class="btn btn-danger" ng-click="vm.blockUnblock(s, $index,  true)">Block</button></td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+	<div class="float-right" ng-if="vm.volunteers.length !== 0" uib-pagination total-items="vm.totalItems" ng-model="vm.currentPage" items-per-page="vm.itemsPerPage" max-size="vm.maxSize" class="pagination-sm" boundary-links="true" ng-change="vm.changePage()"></div>
+	<div class="container-fluid" ng-if="vm.volunteers.length === 0">
+		<h3>Found 0 volunteers</h3>
+	</div>
+</div>
