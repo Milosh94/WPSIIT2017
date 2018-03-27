@@ -268,15 +268,31 @@ public class EmergencySituationService {
 			return Response.status(Status.BAD_REQUEST).build();
 		}
 		User user = (User)request.getSession().getAttribute("user");
-		if(situation.getStatus() != 1 && (user == null || user.isBlocked())){
+		if(situation.getStatus() != 1 && user == null){
 			return Response.status(Status.FORBIDDEN).build();
 		}
+		if(situation.getStatus() != 1 && (user.isBlocked() || user.isAdmin() == false)){
+			return Response.status(Status.FORBIDDEN).build();
+		}
+		EmergencySituation returnSituation = new EmergencySituation();
+		returnSituation.setId(situation.getId());
+		returnSituation.setName(situation.getName());
+		returnSituation.setDistrict(situation.getDistrict());
+		returnSituation.setDescription(situation.getDescription());
+		returnSituation.setDateTime(situation.getDateTime());
+		returnSituation.setLocation(situation.getLocation());
+		returnSituation.setStreetNumber(situation.getStreetNumber());
+		returnSituation.setLocationCoordinates(situation.getLocationCoordinates());
+		returnSituation.setTerritory(situation.getTerritory());
+		returnSituation.setUrgentLevel(situation.getUrgentLevel());
+		returnSituation.setPicture(situation.getPicture());
+		returnSituation.setStatus(situation.getStatus());
 		if(situation.getVolunteer() != null){
 			User volunteer = new User();
 			volunteer.setFirstName(situation.getVolunteer().getFirstName());
 			volunteer.setLastName(situation.getVolunteer().getLastName());
 			volunteer.setUsername(situation.getVolunteer().getUsername());
-			situation.setVolunteer(volunteer);
+			returnSituation.setVolunteer(volunteer);
 		}
 		CommentsRW commentsRW = Utils.getCommentsRW(context);
 		List<Comment> comments = commentsRW.getComments().values()
@@ -298,12 +314,8 @@ public class EmergencySituationService {
 				.sorted((a, b) -> a.getDateTime().compareTo(b.getDateTime()))
 				.collect(Collectors.toList());
 		situation.setComments(comments);
-		if(user != null && situation.getStatus() != 1){
-			if(user.isAdmin() == true){
-				return Response.status(Status.OK).entity(situation).build();
-			}
-		}
-		return Response.status(Status.OK).entity(situation).build();
+		returnSituation.setComments(comments);
+		return Response.status(Status.OK).entity(returnSituation).build();
 	}
 	
 	/*

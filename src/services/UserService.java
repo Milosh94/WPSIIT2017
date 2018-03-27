@@ -24,6 +24,8 @@ import org.glassfish.jersey.media.multipart.FormDataParam;
 
 import beans.Territory;
 import beans.User;
+import dataRW.EmergencySituationsRW;
+import dataRW.TerritoriesRW;
 import dataRW.UsersRW;
 import dto.LoginDTO;
 import dto.RegisterDTO;
@@ -199,7 +201,8 @@ public class UserService {
 		if(!userExists){
 			return Response.status(Status.BAD_REQUEST).build();
 		}
-		Territory t = Utils.getTerritoriesRW(context).getTerritories().get(registerDTO.getTerritory());
+		TerritoriesRW territoriesRW = Utils.getTerritoriesRW(context);
+		Territory t = territoriesRW.getTerritories().get(registerDTO.getTerritory());
 		if(t == null){
 			return Response.status(Status.BAD_REQUEST).build();
 		}
@@ -213,7 +216,18 @@ public class UserService {
 		u.setFirstName(registerDTO.getFirstName().trim().replaceAll("\\s+", " "));
 		u.setLastName(registerDTO.getLastName().trim().replaceAll("\\s+", " "));
 		u.setPhone(registerDTO.getPhone().trim());
-		u.setTerritory(t);
+		if(u.getTerritory().getId() == t.getId()){
+			u.setTerritory(t);
+		}
+		else{
+			EmergencySituationsRW situationsRW = Utils.getEmergencySituationsRW(context);
+			situationsRW.getEmergencySituations().values()
+				.stream()
+				.filter(s -> s.getVolunteer() != null && s.getVolunteer().getId() == u.getId())
+				.forEach(s -> s.setVolunteer(null));
+			situationsRW.writeEmergencySituations(context.getRealPath(""));
+			u.setTerritory(t);
+		}
 		String fileName = fileDetails.getFileName();
 		if(fileName != null && !fileName.trim().equals("") && changePicture == true){
 			long filestamp = (new Date()).getTime();

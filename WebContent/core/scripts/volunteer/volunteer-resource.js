@@ -12,6 +12,10 @@
 			return Restangular.one("territory", territoryId).getList("volunteers");
 		}
 		
+		retObj.getVolunteerSituations = function(){
+			return Restangular.all("volunteer-emergency-situations").customGET("");
+		}
+		
 		return retObj;
 	}
 	

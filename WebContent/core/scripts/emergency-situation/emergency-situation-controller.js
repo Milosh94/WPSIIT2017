@@ -158,15 +158,6 @@
 	
 	reportSituation.$inject = ["$uibModalInstance", "TerritoryResource", "EmergencySituationResource"];
 	
-	//controller for emergency situations assigned to volunteer
-	app.controller("myEmergencySituationsCtrl", myEmergencySituations);
-	
-	function myEmergencySituations(){
-		var vm = this;
-	}
-	
-	myEmergencySituations.$inject = [];
-	
 	//controller for admin for publishing new emergency situations
 	app.controller("publishCtrl", publish);
 	

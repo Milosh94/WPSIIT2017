@@ -1,3 +1,32 @@
-<div class="container-fluid">
-	my emergency situations
+<div class="container-fluid" ng-if="vm.mySituations !== undefined">
+	<div class="table-responsive" ng-if="vm.mySituations.length !== 0">
+		<table class="table table-hover table-striped">
+			<thead>
+				<tr>
+					<th>No.</th>
+					<th>Name</th>
+					<th>District</th>
+					<th>Date</th>
+					<th>Territory</th>
+					<th>Level of urgency</th>
+					<th>Volunteer</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr class="change-cursor" ng-repeat="s in vm.pageSituations" ui-sref="emergency-situation({situationId: s.id})">
+					<td>{{$index + 1}}</td>
+					<td>{{s.name}}</td>
+					<td>{{s.district}}</td>
+					<td>{{s.dateTime}}</td>
+					<td>{{s.territoryName}}</td>
+					<td ng-class="{'color-red': s.urgentLevel === 'RED', 'color-blue': s.urgentLevel === 'BLUE', 'color-orange': s.urgentLevel === 'ORANGE'}">{{s.urgentLevel}}</td>
+					<td>{{s.volunteerName}}</td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+	<div class="float-right" ng-if="vm.mySituations.length !== 0" uib-pagination total-items="vm.totalItems" ng-model="vm.currentPage" items-per-page="vm.itemsPerPage" max-size="vm.maxSize" class="pagination-sm" boundary-links="true" ng-change="vm.changePage()"></div>
+	<div class="container-fluid" ng-if="vm.mySituations.length === 0">
+		<h3>Found 0 emergency situations assigned to you</h3>
+	</div>
 </div>
