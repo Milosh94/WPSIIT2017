@@ -96,7 +96,7 @@
 	//controller for creating new territory
 	app.controller("newTerritoryModalCtrl", newTerritoryModal);
 	
-	function newTerritoryModal($uibModalInstance, TerritoryResource, toastr, toastrConfig){
+	function newTerritoryModal($uibModalInstance, TerritoryResource, toastr, toastrConfig, authentication){
 		var vm = this;
 		
 		vm.territory = {};
@@ -105,6 +105,11 @@
 			if(vm.territory.name !== undefined && vm.territory.name.trim() !== ""){
 				TerritoryResource.territoryExists(vm.territory.name).then(function(response){
 					vm.territoryForm.territoryName.$setValidity("territoryExists", !response.exists);
+				}, function(error){
+					if(error.status === 403){
+						authentication.logout();
+						$state.go("root");
+					}
 				});
 			}
 		}
@@ -125,6 +130,10 @@
 						timeout: 3000
 					});
 					$uibModalInstance.dismiss("error");
+					if(error.status === 403){
+						authentication.logout();
+						$state.go("root");
+					}
 				});
 			}
 			else{
@@ -142,12 +151,12 @@
 		}
 	}
 	
-	newTerritoryModal.$inject = ["$uibModalInstance", "TerritoryResource", "toastr", "toastrConfig"];
+	newTerritoryModal.$inject = ["$uibModalInstance", "TerritoryResource", "toastr", "toastrConfig", "authentication"];
 	
 	//controller for updating existing territory
 	app.controller("updateTerritoryModalCtrl", updateTerritoryModal);
 	
-	function updateTerritoryModal($uibModalInstance, TerritoryResource, toastr, toastrConfig, territory){
+	function updateTerritoryModal($uibModalInstance, TerritoryResource, toastr, toastrConfig, territory, authentication){
 		var vm = this;
 		
 		vm.territory = JSON.parse(JSON.stringify(territory));
@@ -156,6 +165,11 @@
 			if(vm.territory.name !== undefined && vm.territory.name.trim() !== "" && vm.territory.name.trim() !== territory.name){
 				TerritoryResource.territoryExists(vm.territory.name).then(function(response){
 					vm.territoryForm.territoryName.$setValidity("territoryExists", !response.exists);
+				}, function(error){
+					if(error.status === 403){
+						authentication.logout();
+						$state.go("root");
+					}
 				});
 			}
 		}
@@ -176,6 +190,10 @@
 						timeout: 3000
 					});
 					$uibModalInstance.dismiss("error");
+					if(error.status === 403){
+						authentication.logout();
+						$state.go("root");
+					}
 				});
 			}
 			else{
@@ -192,12 +210,12 @@
 		}
 	}
 	
-	updateTerritoryModal.$inject = ["$uibModalInstance", "TerritoryResource", "toastr", "toastrConfig", "territory"];
+	updateTerritoryModal.$inject = ["$uibModalInstance", "TerritoryResource", "toastr", "toastrConfig", "territory", "authentication"];
 	
 	//controller for deleting existing territory
 	app.controller("deleteTerritoryModalCtrl", deleteTerritoryModal);
 	
-	function deleteTerritoryModal($uibModalInstance, TerritoryResource, toastr, toastrConfig, territory){
+	function deleteTerritoryModal($uibModalInstance, TerritoryResource, toastr, toastrConfig, territory, authentication){
 		var vm = this;
 		
 		vm.territory = territory;
@@ -217,6 +235,10 @@
 					timeout: 3000
 				});
 				$uibModalInstance.dismiss("error");
+				if(error.status === 403){
+					authentication.logout();
+					$state.go("root");
+				}
 			});
 		}
 		
@@ -225,5 +247,5 @@
 		}
 	}
 	
-	deleteTerritoryModal.$inject = ["$uibModalInstance", "TerritoryResource", "toastr", "toastrConfig", "territory"];
+	deleteTerritoryModal.$inject = ["$uibModalInstance", "TerritoryResource", "toastr", "toastrConfig", "territory", "authentication"];
 })();

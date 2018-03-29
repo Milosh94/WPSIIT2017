@@ -42,7 +42,7 @@
 	//controller for modal for volunteer updating his profile
 	app.controller("profileModalCtrl", profileModal);
 	
-	function profileModal($uibModalInstance, user, TerritoryResource, UserResource, toastr, toastrConfig, authentication){
+	function profileModal($uibModalInstance, user, TerritoryResource, UserResource, toastr, toastrConfig, authentication, $state){
 		var vm = this;
 		
 		vm.user = JSON.parse(JSON.stringify(user));
@@ -157,6 +157,10 @@
 							timeout: 3000
 						});
 						$uibModalInstance.dismiss("error");
+						if(error.status === 403){
+							authentication.logout();
+							$state.go("root");
+						}
 					}
 				});
 			}
@@ -167,5 +171,5 @@
 		}
 	}
 	
-	profileModal.$inject = ["$uibModalInstance", "user", "TerritoryResource", "UserResource", "toastr", "toastrConfig", "authentication"];
+	profileModal.$inject = ["$uibModalInstance", "user", "TerritoryResource", "UserResource", "toastr", "toastrConfig", "authentication", "$state"];
 })();

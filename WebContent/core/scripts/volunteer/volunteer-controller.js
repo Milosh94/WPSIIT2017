@@ -25,6 +25,11 @@
 			vm.totalItems = vm.mySituations.length;
 			vm.currentPage = 1;
 			vm.changePage();
+		}, function(error){
+			if(error.status === 403){
+				authentication.logout();
+				$state.go("root");
+			}
 		});
 	}
 	
@@ -56,6 +61,11 @@
 			vm.totalItems = vm.volunteers.length;
 			vm.currentPage = 1;
 			vm.changePage();
+		}, function(error){
+			if(error.status === 403){
+				authentication.logout();
+				$state.go("root");
+			}
 		});
 		
 		vm.searchName = "";
@@ -66,7 +76,12 @@
 				vm.totalItems = vm.volunteers.length;
 				vm.currentPage = 1;
 				vm.changePage();
-			})
+			}, function(error){
+				if(error.status === 403){
+					authentication.logout();
+					$state.go("root");
+				}
+			});
 		}
 		
 		vm.blockUnblock = function(user, index, block){
@@ -85,6 +100,11 @@
 				VolunteerResource.blockUnblock(user.username, block).then(function(response){
 					vm.pageVolunteers[index] = response;
 					vm.volunteers[(vm.currentPage - 1) * vm.itemsPerPage + index] = response;
+				}, function(error){
+					if(error.status === 403){
+						authentication.logout();
+						$state.go("root");
+					}
 				});
 			}, function(error){});
 		}

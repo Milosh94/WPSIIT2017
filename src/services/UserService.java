@@ -176,7 +176,7 @@ public class UserService {
 			@FormDataParam("user") FormDataBodyPart jsonPart, @FormDataParam("oldPassword") String oldPassword, @FormDataParam("changePicture") boolean changePicture){
 		User u = (User)request.getSession().getAttribute("user");
 		if(u == null){
-			return Response.status(Status.EXPECTATION_FAILED).build();
+			return Response.status(Status.FORBIDDEN).build();
 		}
 		if(u.isBlocked() == true){
 			return Response.status(Status.FORBIDDEN).build();

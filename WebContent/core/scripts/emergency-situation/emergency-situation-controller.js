@@ -205,6 +205,7 @@
 		EmergencySituationResource.getEmergencySituation($state.params.situationId).then(function(response){
 			vm.situation = response;
 		}, function(error){
+			authentication.logout();
 			$state.go("root", {}, {reload: true});
 		});
 		
@@ -246,7 +247,12 @@
 					}, function(error){
 						$state.go("root", {}, {reload: true});
 					});
-				}, function(error){});
+				}, function(error){
+					if(error.status === 403){
+						authentication.logout();
+						$state.go("root");
+					}
+				});
 			}
 		}
 		
@@ -360,7 +366,7 @@
 	//controller for admin for publish situation modal confirmation
 	app.controller("publishSituationModalCtrl", publishSituationModal);
 	
-	function publishSituationModal(situationId, $uibModalInstance, EmergencySituationResource, toastr, toastrConfig){
+	function publishSituationModal(situationId, $uibModalInstance, EmergencySituationResource, toastr, toastrConfig, authentication){
 		var vm = this;
 		
 		vm.situationId = situationId;
@@ -381,6 +387,10 @@
 					timeout: 3000
 				});
 				$uibModalInstance.close("error");
+				if(error.status === 403){
+					authentication.logout();
+					$state.go("root");
+				}
 			});
 		}
 		
@@ -389,12 +399,12 @@
 		}
 	}
 	
-	publishSituationModal.$inject = ["situationId", "$uibModalInstance", "EmergencySituationResource", "toastr", "toastrConfig"];
+	publishSituationModal.$inject = ["situationId", "$uibModalInstance", "EmergencySituationResource", "toastr", "toastrConfig", "authentication"];
 	
 	//controller for adim for archive situation modal
 	app.controller("archiveSituationModalCtrl", archiveSituationModal);
 	
-	function archiveSituationModal(situationId, $uibModalInstance, EmergencySituationResource, toastr, toastrConfig){
+	function archiveSituationModal(situationId, $uibModalInstance, EmergencySituationResource, toastr, toastrConfig, authentication){
 		var vm = this;
 		
 		vm.situationId = situationId;
@@ -415,6 +425,10 @@
 					timeout: 3000
 				});
 				$uibModalInstance.close("error");
+				if(error.status === 403){
+					authentication.logout();
+					$state.go("root");
+				}
 			});
 		}
 		
@@ -423,12 +437,12 @@
 		}
 	}
 	
-	archiveSituationModal.$inject = ["situationId", "$uibModalInstance", "EmergencySituationResource", "toastr", "toastrConfig"];
+	archiveSituationModal.$inject = ["situationId", "$uibModalInstance", "EmergencySituationResource", "toastr", "toastrConfig", "authentication"];
 	
 	//cpntroller for admin for changing volunteer for situation modal
 	app.controller("changeVolunteerModalCtrl", changeVolunteerModal);
 	
-	function changeVolunteerModal(volunteer, territory, situation, $uibModalInstance, EmergencySituationResource, toastr, toastrConfig, VolunteerResource){
+	function changeVolunteerModal(volunteer, territory, situation, $uibModalInstance, EmergencySituationResource, toastr, toastrConfig, VolunteerResource, authentication){
 		var vm = this;
 		
 		vm.volunteer = volunteer;
@@ -472,6 +486,10 @@
 						timeout: 3000
 					});
 					$uibModalInstance.close("error");
+					if(error.status === 403){
+						authentication.logout();
+						$state.go("root");
+					}
 				});
 			}
 			else{
@@ -488,6 +506,10 @@
 							timeout: 3000
 						});
 						$uibModalInstance.close("error");
+						if(error.status === 403){
+							authentication.logout();
+							$state.go("root");
+						}
 					});
 				}
 				else{
@@ -503,6 +525,10 @@
 							timeout: 3000
 						});
 						$uibModalInstance.close("error");
+						if(error.status === 403){
+							authentication.logout();
+							$state.go("root");
+						}
 					});
 				}
 			}
@@ -513,12 +539,12 @@
 		}
 	}
 	
-	changeVolunteerModal.$inject = ["volunteer", "territory", "situation", "$uibModalInstance", "EmergencySituationResource", "toastr", "toastrConfig", "VolunteerResource"];
+	changeVolunteerModal.$inject = ["volunteer", "territory", "situation", "$uibModalInstance", "EmergencySituationResource", "toastr", "toastrConfig", "VolunteerResource", "authentication"];
 	
 	//controller for admin for changing situation territory
 	app.controller("changeTerritoryModalCtrl", changeTerritoryModal);
 	
-	function changeTerritoryModal(volunteer, territory, situation, $uibModalInstance, EmergencySituationResource, toastr, toastrConfig, TerritoryResource){
+	function changeTerritoryModal(volunteer, territory, situation, $uibModalInstance, EmergencySituationResource, toastr, toastrConfig, TerritoryResource, authentication){
 		var vm = this;
 		
 		vm.volunteer = volunteer;
@@ -557,6 +583,10 @@
 						timeout: 3000
 					});
 					$uibModalInstance.close("error");
+					if(error.status === 403){
+						authentication.logout();
+						$state.go("root");
+					}
 				});
 			}
 			else{
@@ -573,6 +603,10 @@
 							timeout: 3000
 						});
 						$uibModalInstance.close("error");
+						if(error.status === 403){
+							authentication.logout();
+							$state.go("root");
+						}
 					});
 				}
 				else{
@@ -588,6 +622,10 @@
 							timeout: 3000
 						});
 						$uibModalInstance.close("error");
+						if(error.status === 403){
+							authentication.logout();
+							$state.go("root");
+						}
 					});
 				}
 			}
@@ -598,5 +636,5 @@
 		}
 	}
 	
-	changeTerritoryModal.$inject = ["volunteer", "territory", "situation", "$uibModalInstance", "EmergencySituationResource", "toastr", "toastrConfig", "TerritoryResource"];
+	changeTerritoryModal.$inject = ["volunteer", "territory", "situation", "$uibModalInstance", "EmergencySituationResource", "toastr", "toastrConfig", "TerritoryResource", "authentication"];
 })();

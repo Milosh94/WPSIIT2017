@@ -120,6 +120,9 @@
 		
 		$transitions.onBefore({}, function(transition){
 			var user = authentication.getUser();
+			console.log(user);
+			console.log(transition.from().name);
+			console.log(transition.to().name);
 			if(profileTransition === true){
 				profileTransition = false;
 				return false;
@@ -156,7 +159,7 @@
 				return $state.target("home", {fragmentId: "emergency-situation", situationId: transition.params().situationId}, {location: false, reload: "home"});
 			}
 			if(transition.from().name !== "" && transition.from().name !== "root" && transition.to().name === "root"){
-				return $state.target("home", {fragmentId: "search"}, {reload: "home"});
+				return $state.target("home", {fragmentId: "search"}, {reload: "root"});
 			}
 			if(transition.from().name === "" && transition.to().name === "profile"){
 				profileTransition = true;
