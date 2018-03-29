@@ -27,18 +27,14 @@
 			<label class="radio-inline color-blue"><input type="radio" name="urgencyLevel" ng-model="vm.report.urgencyLevel" value="Blue">Blue</label>
 			<label class="radio-inline color-orange"><input type="radio" name="urgencyLevel" ng-model="vm.report.urgencyLevel" value="Orange">Orange</label>
 		</div>
-		<div class="form-group" ng-class="{'has-error': vm.reportForm.selectTerritory.$touched && vm.reportForm.hiddenTerritory.$invalid}">
+		<div class="form-group">
 			<label>Territory</label>
 			<ui-select ng-model="vm.report.territory" name="selectTerritory">
-				<ui-select-match>{{$select.selected.name}}</ui-select-match>
+				<ui-select-match allow-clear="true">{{$select.selected.name}}</ui-select-match>
 				<ui-select-choices repeat="t in vm.territories | filter: {name: $select.search}">
 					<span ng-bind="t.name"></span>
 				</ui-select-choices>
 			</ui-select>
-			<input type="hidden" name="hiddenTerritory" class="form-control" ng-model="vm.report.territory" required/>
-			<div class="help-block" ng-messages="vm.reportForm.hiddenTerritory.$error" ng-show="vm.reportForm.selectTerritory.$touched">
-				<p ng-message="required">This field is required</p>
-			</div>
 		</div>
 		<fieldset class="form-group">
 			<legend>Location<sup><i>optional</i></sup></legend>

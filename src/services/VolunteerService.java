@@ -84,7 +84,7 @@ public class VolunteerService {
 						e.getName(), 
 						e.getDistrict(), 
 						e.getDateTime(), 
-						e.getTerritory().getName(),
+						e.getTerritory() != null ? e.getTerritory().getName() : "",
 						e.getUrgentLevel().toString(), 
 						e.getVolunteer() != null ? e.getVolunteer().getFirstName() + " " + e.getVolunteer().getLastName() : null, 
 						e.getVolunteer() != null ? e.getVolunteer().getUsername() : null))

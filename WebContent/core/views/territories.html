@@ -1,1 +1,42 @@
-<Div>territories</Div>
+<div class="container-fluid" ng-if="vm.territories !== undefined">
+	<form class="form-inline" ng-submit="vm.searchTerritories()">
+		<div class="form-group">
+			<label id="font-size-18px">Search territories</label>
+			<input type="text" class="form-control" id="search-volunteers-input" ng-model="vm.searchName" placeholder="Territory name..." input-validation/>
+			<button type="submit" class="btn btn-primary"><i class="fas fa-search"></i> Search</button>
+		</div>
+	</form>
+	<div class="table-responsive" ng-if="vm.territories.length !== 0">
+		<table class="table table-hover table-striped">
+			<thead>
+				<tr>
+					<th>No.</th>
+					<th>Territory name</th>
+					<th>Surface area</th>
+					<th>Resident count</th>
+					<th class="fit">Update/Delete</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr ng-repeat="s in vm.pageTerritories">
+					<td>{{$index + 1}}</td>
+					<td>{{s.name}}</td>
+					<td>{{s.surfaceArea}}</td>
+					<td>{{s.residentCount}}</td>
+					<td class="fit">
+						<button class="btn btn-primary" ng-click="vm.updateTerritory(s, $index)"><i class="fas fa-pencil-alt"></i> Update</button>
+						<button class="btn btn-danger" ng-click="vm.deleteTerritory(s, $index)"><i class="fas fa-times"></i> Delete</button>
+					</td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+	<div class="float-right" ng-if="vm.territories.length !== 0" uib-pagination total-items="vm.totalItems" ng-model="vm.currentPage" items-per-page="vm.itemsPerPage" max-size="vm.maxSize" class="pagination-sm" boundary-links="true" ng-change="vm.changePage()"></div>
+	<div class="clearfix"></div>
+	<div ng-if="vm.territories.length !== 0">
+		<button type="button" class="btn btn-success float-right" ng-click="vm.newTerritory()"><i class="fas fa-plus"></i> New territory</button>
+	</div>
+	<div class="container-fluid" ng-if="vm.territories.length === 0">
+		<h3>Found 0 territories</h3>
+	</div>
+</div>

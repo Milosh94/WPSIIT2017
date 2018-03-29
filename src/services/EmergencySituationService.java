@@ -34,6 +34,7 @@ import beans.Territory;
 import beans.User;
 import dataRW.CommentsRW;
 import dataRW.EmergencySituationsRW;
+import dataRW.TerritoriesRW;
 import dataRW.UsersRW;
 import dto.EmergencySituationSimpleDTO;
 import dto.ReportDTO;
@@ -59,7 +60,7 @@ public class EmergencySituationService {
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response search(@BeanParam SearchDTO search){
-		User loggedUser = (User)context.getAttribute("user");
+		User loggedUser = (User)request.getSession().getAttribute("user");
 		if(loggedUser != null){
 			if(loggedUser.isAdmin() == false){
 				search.setWithoutVolunteer(false);
@@ -133,7 +134,11 @@ public class EmergencySituationService {
 			if(search.getTerritories().size() != 0){
 				boolean exists = false;
 				for(int territory : search.getTerritories()){
-					if(s.getTerritory().getId() == territory){
+					if(s.getTerritory() == null || s.getTerritory().isStatus() == false){
+						exists = false;
+						break;
+					}
+					else if(s.getTerritory().getId() == territory){
 						exists = true;
 						break;
 					}
@@ -153,7 +158,7 @@ public class EmergencySituationService {
 					s.getName(), 
 					s.getDistrict(), 
 					s.getDateTime(), 
-					s.getTerritory().getName(), 
+					s.getTerritory() != null ? s.getTerritory().getName() : "", 
 					s.getUrgentLevel().toString(), 
 					s.getVolunteer() != null ? s.getVolunteer().getFirstName() + " " + s.getVolunteer().getLastName() : null, 
 					s.getVolunteer() != null ? s.getVolunteer().getUsername() : null
@@ -195,7 +200,7 @@ public class EmergencySituationService {
 			return Response.status(Status.BAD_REQUEST).build();
 		}
 		Territory t = Utils.getTerritoriesRW(context).getTerritories().get(reportDTO.getTerritory());
-		if(t == null){
+		if(t != null && t.isStatus() == false){
 			return Response.status(Status.BAD_REQUEST).build();
 		}
 		EmergencySituation situation = new EmergencySituation();
@@ -249,7 +254,7 @@ public class EmergencySituationService {
 						e.getName(), 
 						e.getDistrict(), 
 						e.getDateTime(), 
-						e.getTerritory().getName(),
+						e.getTerritory() != null ? e.getTerritory().getName() : "", 
 						e.getUrgentLevel().toString(), 
 						e.getVolunteer() != null ? e.getVolunteer().getFirstName() + " " + e.getVolunteer().getLastName() : null, 
 						e.getVolunteer() != null ? e.getVolunteer().getUsername() : null))
@@ -390,7 +395,10 @@ public class EmergencySituationService {
 				return Response.status(Status.BAD_REQUEST).build();
 			}
 			else{
-				if(situation.getTerritory().getId() != user.getTerritory().getId()){
+				if(situation.getTerritory() == null || user.getTerritory() == null){
+					return Response.status(Status.BAD_REQUEST).build();
+				}
+				else if(situation.getTerritory().getId() != user.getTerritory().getId()){
 					return Response.status(Status.BAD_REQUEST).build();
 				}
 				else{
@@ -436,6 +444,44 @@ public class EmergencySituationService {
 		commentsRW.getComments().put(commentId, comment);
 		commentsRW.writeComment(comment, context.getRealPath(""));
 		commentsRW.writeComments(context.getRealPath(""));
+		return Response.status(Status.OK).build();
+	}
+	
+	/*
+	 * Change territory for emergency situation
+	 */
+	@PUT
+	@Path("/emergency-situation/{id}/change-territory")
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response changeTerritory(@PathParam("id") int id, @QueryParam("territory") int territoryId){
+		User user = (User)request.getSession().getAttribute("user");
+		if(user == null || user.isAdmin() == false){
+			return Response.status(Status.FORBIDDEN).build();
+		}
+		EmergencySituationsRW emergencySituationsRW = Utils.getEmergencySituationsRW(context);
+		EmergencySituation situation = emergencySituationsRW.getEmergencySituations().values().stream().filter(e -> e.getId() == id).findFirst().orElse(null);
+		if(situation == null || situation.getStatus() == -1){
+			return Response.status(Status.BAD_REQUEST).build();
+		}
+		if(territoryId != -1){
+			TerritoriesRW territoriesRW = Utils.getTerritoriesRW(context);
+			Territory territory = territoriesRW.getTerritories().values().stream().filter(t -> t.getId() == territoryId).findFirst().orElse(null);
+			if(territory == null || territory.isStatus() == false){
+				return Response.status(Status.BAD_REQUEST).build();
+			}
+			else{
+				if((situation.getTerritory() != null ? situation.getTerritory().getId() : -1) != territory.getId()){
+					situation.setVolunteer(null);
+					situation.setTerritory(territory);
+				}
+			}
+		}
+		else{
+			situation.setTerritory(null);
+			situation.setVolunteer(null);
+		}
+		emergencySituationsRW.writeEmergencySituations(context.getRealPath(""));
 		return Response.status(Status.OK).build();
 	}
 }

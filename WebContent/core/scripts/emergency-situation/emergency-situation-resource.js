@@ -36,6 +36,10 @@
 			return Restangular.one("emergency-situation", situationId).customPOST({comment: comment}, "comment", {}, {});
 		}
 		
+		retObj.changeTerritory = function(situationId, territoryId){
+			return Restangular.one("emergency-situation", situationId).customPUT({}, "change-territory", {territory: territoryId}, {});
+		}
+		
 		return retObj;
 	}
 	

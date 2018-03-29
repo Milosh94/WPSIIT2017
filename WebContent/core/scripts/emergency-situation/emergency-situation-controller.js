@@ -113,7 +113,12 @@
 				else{
 					formData.append("file", "");
 				}
-				vm.report.territory = vm.report.territory.id;
+				if(vm.report.territory === undefined || vm.report.territory === null){
+					vm.report.territory = -1;
+				}
+				else{
+					vm.ureport.territory = vm.report.territory.id;
+				}
 				if(vm.report.description !== undefined){
 					vm.report.description = vm.report.description.replace(/(?:\r\n|\r|\n)/g, " ");
 				}
@@ -319,10 +324,40 @@
 				}
 			}, function(error){});
 		}
+		
+		vm.changeTerritory = function(){
+			var modalInstance = $uibModal.open({
+				templateUrl: "core/views/modals/change-territory.html",
+				controller: "changeTerritoryModalCtrl",
+				controllerAs: "vm",
+				resolve: {
+					volunteer: function(){
+						return vm.situation.volunteer;
+					},
+					territory: function(){
+						return vm.situation.territory;
+					},
+					situation: function(){
+						return vm.situation.id;
+					}
+				}
+			});
+			
+			modalInstance.result.then(function(success){
+				if(success !== "cancel"){
+					EmergencySituationResource.getEmergencySituation($state.params.situationId).then(function(response){
+						vm.situation = response;
+					}, function(error){
+						$state.go("root", {}, {reload: true});
+					});
+				}
+			}, function(error){});
+		}
 	}
 	
 	emergencySituation.$inject = ["EmergencySituationResource", "$state", "authentication", "$uibModal"];
 	
+	//controller for admin for publish situation modal confirmation
 	app.controller("publishSituationModalCtrl", publishSituationModal);
 	
 	function publishSituationModal(situationId, $uibModalInstance, EmergencySituationResource, toastr, toastrConfig){
@@ -331,6 +366,7 @@
 		vm.situationId = situationId;
 		
 		toastrConfig.maxOpened = 1;
+		toastrConfig.positionClass = "toast-top-center";
 		
 		vm.publish = function(){
 			EmergencySituationResource.publishSituation(vm.situationId).then(function(response){
@@ -355,6 +391,7 @@
 	
 	publishSituationModal.$inject = ["situationId", "$uibModalInstance", "EmergencySituationResource", "toastr", "toastrConfig"];
 	
+	//controller for adim for archive situation modal
 	app.controller("archiveSituationModalCtrl", archiveSituationModal);
 	
 	function archiveSituationModal(situationId, $uibModalInstance, EmergencySituationResource, toastr, toastrConfig){
@@ -363,6 +400,7 @@
 		vm.situationId = situationId;
 		
 		toastrConfig.maxOpened = 1;
+		toastrConfig.positionClass = "toast-top-center";
 		
 		vm.archive = function(){
 			EmergencySituationResource.archiveSituation(vm.situationId).then(function(response){
@@ -387,6 +425,7 @@
 	
 	archiveSituationModal.$inject = ["situationId", "$uibModalInstance", "EmergencySituationResource", "toastr", "toastrConfig"];
 	
+	//cpntroller for admin for changing volunteer for situation modal
 	app.controller("changeVolunteerModalCtrl", changeVolunteerModal);
 	
 	function changeVolunteerModal(volunteer, territory, situation, $uibModalInstance, EmergencySituationResource, toastr, toastrConfig, VolunteerResource){
@@ -399,10 +438,16 @@
 		vm.situation = situation;
 		
 		toastrConfig.maxOpened = 1;
+		toastrConfig.positionClass = "toast-top-center";
 		
-		VolunteerResource.getTerritoryVolunteers(vm.territory.id).then(function(response){
-			vm.volunteers = response;
-		});
+		if(vm.territory === null){
+			vm.volunteers = [];
+		}
+		else{
+			VolunteerResource.getTerritoryVolunteers(vm.territory.id).then(function(response){
+				vm.volunteers = response;
+			});
+		}
 		
 		vm.removed = false;
 		
@@ -469,4 +514,89 @@
 	}
 	
 	changeVolunteerModal.$inject = ["volunteer", "territory", "situation", "$uibModalInstance", "EmergencySituationResource", "toastr", "toastrConfig", "VolunteerResource"];
+	
+	//controller for admin for changing situation territory
+	app.controller("changeTerritoryModalCtrl", changeTerritoryModal);
+	
+	function changeTerritoryModal(volunteer, territory, situation, $uibModalInstance, EmergencySituationResource, toastr, toastrConfig, TerritoryResource){
+		var vm = this;
+		
+		vm.volunteer = volunteer;
+		
+		vm.territory = territory;
+		
+		vm.situation = situation;
+		
+		toastrConfig.maxOpened = 1;
+		toastrConfig.positionClass = "toast-top-center";
+		
+		TerritoryResource.getTerritories().then(function(response){
+			vm.territories = response;
+		});
+		
+		vm.removed = false;
+		
+		vm.removeTerritory = function(){
+			if(vm.territory !== null){
+				vm.removed = true;
+				vm.territory = null;
+			}
+		}
+		
+		vm.change = function(){
+			if(vm.selectedTerritory !== undefined && vm.selectedTerritory !== null){
+				EmergencySituationResource.changeTerritory(vm.situation, vm.selectedTerritory.id).then(function(response){
+					toastr.success("Territory changed", "Success", {
+						closeButton: true,
+						timeout: 3000
+					});
+					$uibModalInstance.close("success");
+				}, function(error){
+					toastr.error("Error", {
+						closeButton: true,
+						timeout: 3000
+					});
+					$uibModalInstance.close("error");
+				});
+			}
+			else{
+				if(vm.removed === true){
+					EmergencySituationResource.changeTerritory(vm.situation, -1).then(function(response){
+						toastr.success("Territory changed", "Success", {
+							closeButton: true,
+							timeout: 3000
+						});
+						$uibModalInstance.close("success");
+					}, function(error){
+						toastr.error("Error", {
+							closeButton: true,
+							timeout: 3000
+						});
+						$uibModalInstance.close("error");
+					});
+				}
+				else{
+					EmergencySituationResource.changeTerritory(vm.situation, vm.territory.id).then(function(response){
+						toastr.success("Territory changed", "Success", {
+							closeButton: true,
+							timeout: 3000
+						});
+						$uibModalInstance.close("success");
+					}, function(error){
+						toastr.error("Error", {
+							closeButton: true,
+							timeout: 3000
+						});
+						$uibModalInstance.close("error");
+					});
+				}
+			}
+		}
+		
+		vm.cancel = function(){
+			$uibModalInstance.close("cancel");
+		}
+	}
+	
+	changeTerritoryModal.$inject = ["volunteer", "territory", "situation", "$uibModalInstance", "EmergencySituationResource", "toastr", "toastrConfig", "TerritoryResource"];
 })();

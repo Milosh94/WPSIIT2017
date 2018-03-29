@@ -51,16 +51,16 @@ public class UserService {
 	@Path("/login")
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
-	public UserDTO login(LoginDTO login){
+	public Response login(LoginDTO login){
 		for(User user : Utils.getUsersRW(context).getUsers().values()){
 			if(user.getUsername().trim().equals(login.getUsername()) && user.getPassword().trim().equals(login.getPassword())){
 				request.getSession().setAttribute("user", user);
 				UserDTO userDTO = new UserDTO(user.getUsername(), user.getFirstName(), user.getLastName(), user.getPhone(), user.getEmail(),
 						user.getTerritory(), user.getPicture(), user.isBlocked(), user.isAdmin());
-				return userDTO;
+				return Response.status(Status.OK).entity(userDTO).build();
 			}
 		}
-		return null;
+		return Response.status(Status.NOT_FOUND).build();
 	}
 	
 	/*
@@ -116,7 +116,7 @@ public class UserService {
 			}
 		}
 		Territory t = Utils.getTerritoriesRW(context).getTerritories().get(registerDTO.getTerritory());
-		if(t == null){
+		if(t != null && t.isStatus() == false){
 			return Response.status(Status.BAD_REQUEST).build();
 		}
 		User user = new User();
@@ -155,14 +155,14 @@ public class UserService {
 	@Path("/logged-user")
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
-	public UserDTO getLoggedUser(){
+	public Response getLoggedUser(){
 		User user = (User)request.getSession().getAttribute("user");
 		if(user == null){
-			return null;
+			return Response.status(Status.FORBIDDEN).build();
 		}
 		UserDTO userDTO = new UserDTO(user.getUsername(), user.getFirstName(), user.getLastName(), user.getPhone(), user.getEmail(),
 				user.getTerritory(), user.getPicture(), user.isBlocked(), user.isAdmin());
-		return userDTO;
+		return Response.status(Status.OK).entity(userDTO).build();
 	}
 	
 	/*
@@ -206,7 +206,7 @@ public class UserService {
 		}
 		TerritoriesRW territoriesRW = Utils.getTerritoriesRW(context);
 		Territory t = territoriesRW.getTerritories().get(registerDTO.getTerritory());
-		if(t == null){
+		if(t != null && t.isStatus() == false){
 			return Response.status(Status.BAD_REQUEST).build();
 		}
 		if(u.getPassword().equals(oldPassword) && registerDTO.getPassword().equals("")){
@@ -219,7 +219,10 @@ public class UserService {
 		u.setFirstName(registerDTO.getFirstName().trim().replaceAll("\\s+", " "));
 		u.setLastName(registerDTO.getLastName().trim().replaceAll("\\s+", " "));
 		u.setPhone(registerDTO.getPhone().trim());
-		if(u.getTerritory().getId() == t.getId()){
+		if(u.getTerritory() == null){
+			u.setTerritory(t);
+		}
+		else if(t != null && u.getTerritory().getId() == t.getId()){
 			u.setTerritory(t);
 		}
 		else{

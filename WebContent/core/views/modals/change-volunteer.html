@@ -20,8 +20,9 @@
 		<button class="btn btn-danger" ng-click="vm.removeVolunteer()" ng-if="vm.volunteer !== null">Remove volunteer</button>
 	</div>
 	<div class="form-group">
-		<label>Select new volunteer</label>
-		<ui-select ng-model="vm.selectedVolunteer">
+		<label ng-if="vm.volunteers.length > 0">Select new volunteer</label>
+		<h4 ng-if="vm.volunteers.length === 0">No volunteers from the situation territory</h4>
+		<ui-select ng-model="vm.selectedVolunteer" ng-if="vm.volunteers.length > 0">
 			<ui-select-match allow-clear="true" placeholder="Select volunteer by username...">{{$select.selected.username}}</ui-select-match>
 			<ui-select-choices repeat="t in vm.volunteers | filter: {username: $select.search}">
 				<span ng-bind="t.username"></span>
@@ -30,6 +31,6 @@
 	</div>
 </div>
 <div class="modal-footer">
-	<button class="btn btn-primary" ng-click="vm.change()">Change</button>
+	<button class="btn btn-primary" ng-click="vm.change()" ng-disabled="vm.volunteers.length === 0">Change</button>
 	<button class="btn btn-danger" ng-click="vm.cancel()">Cancel</button>
 </div>

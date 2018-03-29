@@ -1,0 +1,39 @@
+<div class="modal-header">
+	<h3 class="modal-title">Update territory</h3>
+</div>
+<div class="modal-body">
+	<form name="vm.territoryForm" novalidate>
+		<div class="form-group" ng-class="{'has-error': vm.territoryForm.territoryName.$touched && vm.territoryForm.territoryName.$invalid}">
+			<label for="territoryName">Territory name</label>
+			<input type="text" ng-model="vm.territory.name" name="territoryName" id="territoryName" class="form-control" ng-change="vm.territoryExists()" input-validation required/>
+			<div ng-messages="vm.territoryForm.territoryName.$error" class="help-block" ng-show="vm.territoryForm.territoryName.$touched">
+				<p ng-message="required">This field is required</p>
+				<p ng-message="territoryExists">Already exists</p>
+			</div>
+		</div>
+		<div class="form-group" ng-class="{'has-error': vm.territoryForm.surfaceArea.$touched && vm.territoryForm.surfaceArea.$invalid}">
+			<label for="surfaceArea">Surface area</label>
+			<input type="number" ng-model="vm.territory.surfaceArea" name="surfaceArea" id="surfaceArea" class="form-control" ng-pattern="/^[^e]+$/" min="1" required/>
+			<div ng-messages="vm.territoryForm.surfaceArea.$error" class="help-block" ng-show="vm.territoryForm.surfaceArea.$touched">
+				<p ng-message="required">You did not enter a number</p>
+	        	<p ng-message="number">You did not enter a valid number</p>
+	        	<p ng-message="min">Your number must be greater from zero</p>
+	        	<p ng-message="pattern">You did not enter a valid number</p>
+			</div>
+		</div>
+		<div class="form-group" ng-class="{'has-error': vm.territoryForm.residentCount.$touched && vm.territoryForm.residentCount.$invalid}">
+			<label for="residentCount">Resident count</label>
+			<input type="number" ng-model="vm.territory.residentCount" name="residentCount" id="residentCount" class="form-control" ng-pattern="/^[0-9]+$/" min="0" required/>
+			<div ng-messages="vm.territoryForm.residentCount.$error" class="help-block" ng-show="vm.territoryForm.residentCount.$touched">
+				<p ng-message="required">You did not enter a number</p>
+	        	<p ng-message="number">You did not enter a valid number</p>
+	        	<p ng-message="min">Your number is lesser than zero</p>
+	        	<p ng-message="pattern">You did not enter a valid number</p>
+			</div>
+		</div>
+	</form>
+</div>
+<div class="modal-footer">
+	<button class="btn btn-primary" ng-click="vm.updateTerritory(vm.territoryForm.$valid, vm.territoryForm)">Update</button>
+	<button class="btn btn-default" ng-click="vm.cancel()">Cancel</button>
+</div>

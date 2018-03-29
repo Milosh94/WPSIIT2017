@@ -1,4 +1,5 @@
 (function(){
+	//controller for logged user profile
 	app.controller("profileCtrl", profile);
 	
 	function profile(authentication, UserResource, $state, $timeout, $uibModal){
@@ -10,6 +11,14 @@
 				$state.go("root");
 			});
 		}
+		
+		UserResource.getLoggedUser().then(function(response){
+			vm.user = response;
+			authentication.saveUser(response);
+		}, function(error){
+			authentication.logout();
+			$state.go("root");
+		});
 		
 		vm.updateProfile = function(){
 			var modalInstance = $uibModal.open({
@@ -30,6 +39,7 @@
 	
 	profile.$inject = ["authentication", "UserResource", "$state", "$timeout", "$uibModal"];
 	
+	//controller for modal for volunteer updating his profile
 	app.controller("profileModalCtrl", profileModal);
 	
 	function profileModal($uibModalInstance, user, TerritoryResource, UserResource, toastr, toastrConfig, authentication){
@@ -110,8 +120,13 @@
 						firstName: vm.user.firstName,
 						lastName: vm.user.lastName,
 						phone: vm.user.phone,
-						email: vm.user.email,
-						territory: vm.user.territory.id
+						email: vm.user.email
+				}
+				if(vm.user.territory === undefined || vm.user.territory === null){
+					vm.updatedUser.territory = -1;
+				}
+				else{
+					vm.updatedUser.territory = vm.user.territory.id;
 				}
 				if(vm.oldPassword !== undefined && vm.oldPassword !== "" && vm.user.password !== undefined && vm.user.password !== ""){
 					formData.append("oldPassword", vm.oldPassword);
@@ -122,6 +137,7 @@
 				}
 				formData.append("user", JSON.stringify(vm.updatedUser));
 				toastrConfig.maxOpened = 1;
+				toastrConfig.positionClass = "toast-top-center";
 				UserResource.updateUser(formData).then(function(response){
 					toastr.success("Success: User updated", {
 						closeButton: true,

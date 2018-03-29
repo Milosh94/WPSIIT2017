@@ -1,5 +1,5 @@
 (function(angular){
-	//Home navigation
+	//home navigation
 	app.controller("homeCtrl", home);
 	
 	function home(authentication, $state, $timeout, $uibModal, TerritoryResource, toastr, toastrConfig){
@@ -9,18 +9,16 @@
 		
 		vm.loginUser = {};
 		toastrConfig.maxOpened = 1;
+		toastrConfig.positionClass = "toast-top-center";
 		vm.login = function(){
 			authentication.login(vm.loginUser).then(function(response){
-				if(response === null){
-					toastr.error("Wrong credentials!", "Error", {
-						closeButton: true,
-						timeout: 3000
-					});
-				}
-				else{
 					vm.user = authentication.getUser();
 					$state.go($state.current, {}, {reload: true});
-				}
+			}, function(error){
+				toastr.error("Wrong credentials!", "Error", {
+					closeButton: true,
+					timeout: 3000
+				});
 			});
 		}
 		
@@ -68,7 +66,7 @@
 	
 	home.$inject = ["authentication", "$state", "$timeout", "$uibModal", "TerritoryResource", "toastr", "toastrConfig"];
 	
-	//Register modal
+	//register modal
 	app.controller("registerCtrl", register);
 	
 	function register($uibModalInstance, territories, TerritoryResource, UserResource, toastr, toastrConfig){
@@ -121,9 +119,15 @@
 				else{
 					formData.append("file", "");
 				}
-				vm.data.territory = vm.data.territory.id;
+				if(vm.data.territory === undefined || vm.data.territory === null){
+					vm.data.territory = -1;
+				}
+				else{
+					vm.data.territory = vm.data.territory.id;
+				}
 				formData.append("user", JSON.stringify(vm.data));
 				toastrConfig.maxOpened = 1;
+				toastrConfig.positionClass = "toast-top-center";
 				UserResource.register(formData).then(function(response){
 					toastr.success("Please login", "Success: User registered", {
 						closeButton: true,
@@ -174,6 +178,7 @@
 				controllerAs: "vm"
 			});
 			toastrConfig.maxOpened = 1;
+			toastrConfig.positionClass = "toast-top-center";
 			modalInstance.result.then(function(success){
 				vm.activeButton = current;
 				if(success !== "close"){

@@ -16,11 +16,11 @@
 					<th>Last name</th>
 					<th>Territory</th>
 					<th>Status</th>
-					<th>Block/Unblock</th>
+					<th class="fit">Block/Unblock</th>
 				</tr>
 			</thead>
 			<tbody>
-				<tr class="change-cursor" ng-repeat="s in vm.pageVolunteers">
+				<tr ng-repeat="s in vm.pageVolunteers">
 					<td>{{$index + 1}}</td>
 					<td>{{s.username}}</td>
 					<td>{{s.firstName}}</td>
@@ -28,8 +28,8 @@
 					<td>{{s.territory.name}}</td>
 					<td ng-if="s.blocked === true">Blocked</td>
 					<td ng-if="s.blocked === false">Active</td>
-					<td ng-if="s.blocked === true"><button class="btn btn-primary" ng-click="vm.blockUnblock(s, $index, false)">Unblock</button></td>
-					<td ng-if="s.blocked === false"><button class="btn btn-danger" ng-click="vm.blockUnblock(s, $index,  true)">Block</button></td>
+					<td class="fit" ng-if="s.blocked === true"><button class="btn btn-primary" ng-click="vm.blockUnblock(s, $index, false)">Unblock</button></td>
+					<td class="fit" ng-if="s.blocked === false"><button class="btn btn-danger" ng-click="vm.blockUnblock(s, $index,  true)">Block</button></td>
 				</tr>
 			</tbody>
 		</table>

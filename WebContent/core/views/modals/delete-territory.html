@@ -1,0 +1,23 @@
+<div class="modal-header">
+	<h3 class="modal-title">Delete territory</h3>
+</div>
+<div class="modal-body">
+	<form name="vm.territoryForm" novalidate>
+		<div class="form-group">
+			<label for="territoryName">Territory name</label>
+			<input type="text" ng-model="vm.territory.name" name="territoryName" id="territoryName" class="form-control" disabled/>
+		</div>
+		<div class="form-group">
+			<label for="surfaceArea">Surface area</label>
+			<input type="number" ng-model="vm.territory.surfaceArea" name="surfaceArea" id="surfaceArea" class="form-control" disabled/>
+		</div>
+		<div class="form-group">
+			<label for="residentCount">Resident count</label>
+			<input type="number" ng-model="vm.territory.residentCount" name="residentCount" id="residentCount" class="form-control" disabled/>
+		</div>
+	</form>
+</div>
+<div class="modal-footer">
+	<button class="btn btn-primary" ng-click="vm.deleteTerritory()">Delete</button>
+	<button class="btn btn-default" ng-click="vm.cancel()">Cancel</button>
+</div>

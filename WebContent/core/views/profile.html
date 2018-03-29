@@ -21,7 +21,7 @@
 				<div class="col-xs-2"><b>Email:</b></div>
 				<div class="col-xs-10">{{vm.user.email}}</div>
 			</div>
-			<div class="profile-row row">
+			<div class="profile-row row" ng-if="vm.user.territory !== null">
 				<div class="col-xs-2"><b>Territory:</b></div>
 				<div class="col-xs-10">{{vm.user.territory.name}}</div>
 			</div>

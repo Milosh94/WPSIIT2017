@@ -10,16 +10,18 @@ public class Territory {
 
 	private int residentCount;
 	
+	private boolean status;
+	
 	public Territory(){
-		
 	}
 
-	public Territory(int id, String name, double surfaceArea, int residentCount) {
+	public Territory(int id, String name, double surfaceArea, int residentCount, boolean status) {
 		super();
 		this.id = id;
 		this.name = name;
 		this.surfaceArea = surfaceArea;
 		this.residentCount = residentCount;
+		this.status = status;
 	}
 
 	public int getId() {
@@ -54,6 +56,14 @@ public class Territory {
 		this.residentCount = residentCount;
 	}
 
+	public boolean isStatus() {
+		return status;
+	}
+
+	public void setStatus(boolean status) {
+		this.status = status;
+	}
+
 	@Override
 	public String toString() {
 		return "Territory [id=" + id + ", name=" + name + ", surfaceArea=" + surfaceArea + ", residentCount="
@@ -61,6 +71,6 @@ public class Territory {
 	}
 	
 	public String toFile(){
-		return this.id + "; " + this.name + "; " + this.surfaceArea + "; " + this.residentCount;
+		return this.id + "; " + this.name + "; " + this.surfaceArea + "; " + this.residentCount + "; " + this.status;
 	}
 }

@@ -53,18 +53,14 @@
 			<p ng-message="required">This field is required</p>
 		</div>
 	</div>
-	<div class="form-group" ng-class="{'has-error': vm.profileForm.hiddenTerritory.$invalid}">
+	<div class="form-group">
 		<label>Territory</label>
 		<ui-select ng-model="vm.user.territory">
-			<ui-select-match>{{$select.selected.name}}</ui-select-match>
+			<ui-select-match allow-clear="true">{{$select.selected.name}}</ui-select-match>
 			<ui-select-choices repeat="t in vm.territories | filter: {name: $select.search}">
 				<span ng-bind="t.name"></span>
 			</ui-select-choices>
 		</ui-select>
-		<input ng-model="vm.user.territory" type="hidden" name="hiddenTerritory" class="form-control" required/>
-		<div ng-messages="vm.profileForm.hiddenTerritory.$error" class="help-block">
-			<p ng-message="required">This field is required</p>
-		</div>
 	</div>
 	<img id="profilePicture" src="images/web/no-image.png" ng-if="vm.user.picture.trim() === ''" alt="No image selected"/>
 	<img id="profilePicture" ng-src="images/users/{{vm.user.picture}}" ng-if="vm.user.picture.trim() !== ''" alt="No image selected"/>

@@ -114,22 +114,17 @@
 	function runFunction(Restangular, $transitions, authentication, $location, $state){
 		Restangular.setBaseUrl("rest");
 		
-		//UPDATEEEEEEEEEEEEEEEEEEEEEEEE
 		var statesList = ["search", "emergency-situations", "publish", "volunteers", "territories"];
 		
 		var profileTransition = false;
 		
 		$transitions.onBefore({}, function(transition){
-			//console.log("before");
-			console.log(transition.from().name);
-			console.log(transition.to().name);
 			var user = authentication.getUser();
-			//console.log(user);
 			if(profileTransition === true){
 				profileTransition = false;
 				return false;
 			}
-			if(user === null && (transition.to().name === "profile" || transition.to().name === "emergency-situations" || transition.to().name === "publish" 
+			if((user === undefined || user === null) && (transition.to().name === "profile" || transition.to().name === "emergency-situations" || transition.to().name === "publish" 
 				|| transition.to().name === "volunteers" || transition.to().name === "territories")){
 				if(transition.from().name === "" || transition.from().name === "profile" || transition.from().name === "emergency-situations" || transition.from().name === "publish" 
 					|| transition.to().name === "volunteers" || transition.to().name === "territories"){
@@ -139,9 +134,6 @@
 					$location.path(transition.router.urlRouter.location);
 					return false;
 				}
-				//console.log(transition.router.urlRouter);
-				//return transition.router.stateService.target("root");
-				
 			}
 			if(user !== null && user.admin === false && (transition.to().name === "publish" || transition.to().name === "volunteers" || transition.to().name === "territories")){
 				$location.path(transition.router.urlRouter.location);
@@ -169,12 +161,6 @@
 			if(transition.from().name === "" && transition.to().name === "profile"){
 				profileTransition = true;
 			}
-		});
-		
-		$transitions.onError({}, function(transition){
-			console.log("error");
-			console.log(transition.from().name);
-			console.log(transition.to().name);
 		});
 	}
 	

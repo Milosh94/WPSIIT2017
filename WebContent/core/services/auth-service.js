@@ -12,19 +12,14 @@
 			user = JSON.parse(user);
 			var d = new Date();
 			d.setHours(d.getHours() - 1);
-			console.log(d);
-			console.log(user.accessTime);
 			if(new Date(user.accessTime) < d){
 				UserResource.getLoggedUser().then(function(response){
-					if(response === undefined){
-						$window.localStorage.removeItem("user");
-						$cookies.remove("JSESSIONID");
-						return null;
-					}
-					else{
-						retObj.saveUser(response);
-						return response;
-					}
+					retObj.saveUser(response);
+					return response;
+				}, function(error){
+					$window.localStorage.removeItem("user");
+					$cookies.remove("JSESSIONID");
+					return null;
 				});
 			}
 			else{

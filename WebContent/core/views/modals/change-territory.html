@@ -1,0 +1,36 @@
+<div class="modal-header">
+	<h3 class="modal-title">Change territory</h3>
+</div>
+<div class="modal-body" ng-form="vm.changeForm">
+	<h4 ng-if="vm.territory !== null">Currently territory</h4>
+	<h4 ng-if="vm.territory === null">Currently without territory</h4>
+	<div class="form-group" ng-if="vm.territory !== null">
+		<label>Territory name</label>
+		<input type="text" ng-model="vm.territory.name" class="form-control" disabled>
+	</div>
+	<div class="form-group" ng-if="vm.territory !== null">
+		<label>Surface area</label>
+		<input type="text" ng-model="vm.territory.surfaceArea" class="form-control" disabled>
+	</div>
+	<div class="form-group" ng-if="vm.territory !== null">
+		<label>Resident count</label>
+		<input type="text" ng-model="vm.territory.residentCount" class="form-control" disabled>
+	</div>
+	<div class="form-group">
+		<button class="btn btn-danger" ng-click="vm.removeTerritory()" ng-if="vm.territory !== null">Remove territory</button>
+	</div>
+	<div class="form-group">
+		<label ng-if="vm.territories.length > 0">Select new territory</label>
+		<h4 ng-if="vm.territories.length === 0">No territories avaliable</h4>
+		<ui-select ng-model="vm.selectedTerritory" ng-if="vm.territories.length > 0">
+			<ui-select-match allow-clear="true" placeholder="Select territory by name...">{{$select.selected.name}}</ui-select-match>
+			<ui-select-choices repeat="t in vm.territories | filter: {name: $select.search}">
+				<span ng-bind="t.name"></span>
+			</ui-select-choices>
+		</ui-select>
+	</div>
+</div>
+<div class="modal-footer">
+	<button class="btn btn-primary" ng-click="vm.change()" ng-disabled="vm.territories.length === 0">Change</button>
+	<button class="btn btn-danger" ng-click="vm.cancel()">Cancel</button>
+</div>

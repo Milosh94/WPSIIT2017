@@ -147,3 +147,9 @@
 #font-size-18px{
 	font-size: 18px;
 }
+
+.table td.fit, 
+.table th.fit{
+    white-space: nowrap;
+    width: 1%;
+}

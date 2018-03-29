@@ -54,6 +54,7 @@ public class TerritoriesRW {
 					territory.setName(st.nextToken().trim());
 					territory.setSurfaceArea(Double.parseDouble(st.nextToken().trim()));
 					territory.setResidentCount(Integer.parseInt(st.nextToken().trim()));
+					territory.setStatus(Boolean.parseBoolean(st.nextToken().trim()));
 				}
 				this.territories.put(id, territory);
 			}

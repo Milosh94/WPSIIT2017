@@ -23,7 +23,8 @@
 			</div>
 			<div class="profile-row row">
 				<div class="col-xs-2"><b>Territory:</b></div>
-				<div class="col-xs-10">{{vm.situation.territory.name}}</div>
+				<div class="col-xs-10" ng-if="vm.situation.territory !== null">{{vm.situation.territory.name}}</div>
+				<div class="col-xs-10" ng-if="vm.situation.territory === null">None</div>
 			</div>
 			<div class="profile-row row" ng-if="vm.situation.volunteer !== null">
 				<div class="col-xs-2"><b>Volunteer username:</b></div>
@@ -86,6 +87,7 @@
 			</div>
 		</div>
 		<div class="profile-update-button container-fluid">
+			<button class="btn btn-info" ng-click="vm.changeTerritory()" ng-if="vm.user !== null && vm.user.admin === true && vm.situation.status !== -1"><i class="fas fa-pencil-alt"></i> Change territory</button>
 			<button class="btn btn-primary" ng-click="vm.changeVolunteer()" ng-if="vm.user !== null && vm.user.admin === true && vm.situation.status !== -1"><i class="fas fa-pencil-alt"></i> Change volunteer</button>
 			<button class="btn btn-success" ng-click="vm.publishSituation()" ng-if="vm.user !== null && vm.user.admin === true && vm.situation.status === 0"><i class="fas fa-sign-in-alt"></i> Publish</button>
 			<button class="btn btn-danger" ng-click="vm.archiveSituation()" ng-if="vm.user !== null && vm.user.admin === true && vm.situation.status !== -1"><i class="fas fa-times"></i> Archive</button>

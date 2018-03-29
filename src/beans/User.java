@@ -141,7 +141,7 @@ public class User {
 	
 	public String toFile(){
 		return this.id + "; " + this.username + "; " + this.password + "; " + this.firstName + "; " + this.lastName
-				+ "; " + this.phone + "; " + this.email + "; " + this.territory.getId() + "; " + this.picture + "; "
+				+ "; " + this.phone + "; " + this.email + "; " + (this.territory == null ? -1 : this.territory.getId()) + "; " + this.picture + "; "
 				+ this.blocked + "; " + this.admin;
 	}
 }
