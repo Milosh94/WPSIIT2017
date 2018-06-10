@@ -117,7 +117,7 @@
 					vm.report.territory = -1;
 				}
 				else{
-					vm.ureport.territory = vm.report.territory.id;
+					vm.report.territory = vm.report.territory.id;
 				}
 				if(vm.report.description !== undefined){
 					vm.report.description = vm.report.description.replace(/(?:\r\n|\r|\n)/g, " ");
@@ -168,13 +168,13 @@
 	
 	function publish(authentication, $timeout, $state, EmergencySituationResource){
 		var vm = this;
-		
-		vm.user = authentication.getUser();
-		if(vm.user === null){
-			$timeout(function(){
-				$state.go("root");
-			});
-		}
+		console.log("publish state");
+		vm.user = authentication.getLoggedUser();
+		//if(vm.user === null){
+		//	$timeout(function(){
+		//		$state.go("root");
+		//	});
+		//}
 		
 		vm.maxSize = 5;
 		vm.itemsPerPage = 10;
@@ -200,13 +200,13 @@
 	function emergencySituation(EmergencySituationResource, $state, authentication, $uibModal){
 		var vm = this;
 		
-		vm.user = authentication.getUser();
+		vm.user = authentication.getLoggedUser();
 		
 		EmergencySituationResource.getEmergencySituation($state.params.situationId).then(function(response){
 			vm.situation = response;
 		}, function(error){
-			authentication.logout();
-			$state.go("root", {}, {reload: true});
+			//authentication.logout();//ne treba logout ukoliko ubode situaciju za koju nema dozvolu treba u stat
+			$state.go("root");
 		});
 		
 		vm.config = {
@@ -245,7 +245,7 @@
 					EmergencySituationResource.getEmergencySituation($state.params.situationId).then(function(response){
 						vm.situation = response;
 					}, function(error){
-						$state.go("root", {}, {reload: true});
+						$state.go("root");
 					});
 				}, function(error){
 					if(error.status === 403){
@@ -253,6 +253,7 @@
 						$state.go("root");
 					}
 				});
+				vm.comment = "";
 			}
 		}
 		
@@ -273,7 +274,9 @@
 					EmergencySituationResource.getEmergencySituation($state.params.situationId).then(function(response){
 						vm.situation = response;
 					}, function(error){
-						$state.go("root", {}, {reload: true});
+						if(success !== "403"){
+							$state.go("root");
+						}
 					});
 				}
 			}, function(error){});
@@ -296,7 +299,9 @@
 					EmergencySituationResource.getEmergencySituation($state.params.situationId).then(function(response){
 						vm.situation = response;
 					}, function(error){
-						$state.go("root", {}, {reload: true});
+						if(success !== "403"){
+							$state.go("root");
+						}
 					});
 				}
 			}, function(error){});
@@ -325,7 +330,9 @@
 					EmergencySituationResource.getEmergencySituation($state.params.situationId).then(function(response){
 						vm.situation = response;
 					}, function(error){
-						$state.go("root", {}, {reload: true});
+						if(success !== "403"){
+							$state.go("root");
+						}
 					});
 				}
 			}, function(error){});
@@ -354,7 +361,9 @@
 					EmergencySituationResource.getEmergencySituation($state.params.situationId).then(function(response){
 						vm.situation = response;
 					}, function(error){
-						$state.go("root", {}, {reload: true});
+						if(success !== "403"){
+							$state.go("root");
+						}
 					});
 				}
 			}, function(error){});
@@ -366,7 +375,7 @@
 	//controller for admin for publish situation modal confirmation
 	app.controller("publishSituationModalCtrl", publishSituationModal);
 	
-	function publishSituationModal(situationId, $uibModalInstance, EmergencySituationResource, toastr, toastrConfig, authentication){
+	function publishSituationModal(situationId, $uibModalInstance, EmergencySituationResource, toastr, toastrConfig, authentication, $state){
 		var vm = this;
 		
 		vm.situationId = situationId;
@@ -386,10 +395,13 @@
 					closeButton: true,
 					timeout: 3000
 				});
-				$uibModalInstance.close("error");
 				if(error.status === 403){
+					$uibModalInstance.close("403");
 					authentication.logout();
 					$state.go("root");
+				}
+				else{
+					$uibModalInstance.close("error");
 				}
 			});
 		}
@@ -399,12 +411,12 @@
 		}
 	}
 	
-	publishSituationModal.$inject = ["situationId", "$uibModalInstance", "EmergencySituationResource", "toastr", "toastrConfig", "authentication"];
+	publishSituationModal.$inject = ["situationId", "$uibModalInstance", "EmergencySituationResource", "toastr", "toastrConfig", "authentication", "$state"];
 	
 	//controller for adim for archive situation modal
 	app.controller("archiveSituationModalCtrl", archiveSituationModal);
 	
-	function archiveSituationModal(situationId, $uibModalInstance, EmergencySituationResource, toastr, toastrConfig, authentication){
+	function archiveSituationModal(situationId, $uibModalInstance, EmergencySituationResource, toastr, toastrConfig, authentication, $state){
 		var vm = this;
 		
 		vm.situationId = situationId;
@@ -424,10 +436,13 @@
 					closeButton: true,
 					timeout: 3000
 				});
-				$uibModalInstance.close("error");
 				if(error.status === 403){
+					$uibModalInstance.close("403");
 					authentication.logout();
 					$state.go("root");
+				}
+				else{
+					$uibModalInstance.close("error");
 				}
 			});
 		}
@@ -437,12 +452,12 @@
 		}
 	}
 	
-	archiveSituationModal.$inject = ["situationId", "$uibModalInstance", "EmergencySituationResource", "toastr", "toastrConfig", "authentication"];
+	archiveSituationModal.$inject = ["situationId", "$uibModalInstance", "EmergencySituationResource", "toastr", "toastrConfig", "authentication", "$state"];
 	
 	//cpntroller for admin for changing volunteer for situation modal
 	app.controller("changeVolunteerModalCtrl", changeVolunteerModal);
 	
-	function changeVolunteerModal(volunteer, territory, situation, $uibModalInstance, EmergencySituationResource, toastr, toastrConfig, VolunteerResource, authentication){
+	function changeVolunteerModal(volunteer, territory, situation, $uibModalInstance, EmergencySituationResource, toastr, toastrConfig, VolunteerResource, authentication, $state){
 		var vm = this;
 		
 		vm.volunteer = volunteer;
@@ -485,10 +500,13 @@
 						closeButton: true,
 						timeout: 3000
 					});
-					$uibModalInstance.close("error");
 					if(error.status === 403){
+						$uibModalInstance.close("403");
 						authentication.logout();
 						$state.go("root");
+					}
+					else{
+						$uibModalInstance.close("error");
 					}
 				});
 			}
@@ -505,10 +523,13 @@
 							closeButton: true,
 							timeout: 3000
 						});
-						$uibModalInstance.close("error");
 						if(error.status === 403){
+							$uibModalInstance.close("403");
 							authentication.logout();
 							$state.go("root");
+						}
+						else{
+							$uibModalInstance.close("error");
 						}
 					});
 				}
@@ -524,10 +545,13 @@
 							closeButton: true,
 							timeout: 3000
 						});
-						$uibModalInstance.close("error");
 						if(error.status === 403){
+							$uibModalInstance.close("403");
 							authentication.logout();
 							$state.go("root");
+						}
+						else{
+							$uibModalInstance.close("error");
 						}
 					});
 				}
@@ -539,12 +563,12 @@
 		}
 	}
 	
-	changeVolunteerModal.$inject = ["volunteer", "territory", "situation", "$uibModalInstance", "EmergencySituationResource", "toastr", "toastrConfig", "VolunteerResource", "authentication"];
+	changeVolunteerModal.$inject = ["volunteer", "territory", "situation", "$uibModalInstance", "EmergencySituationResource", "toastr", "toastrConfig", "VolunteerResource", "authentication", "$state"];
 	
 	//controller for admin for changing situation territory
 	app.controller("changeTerritoryModalCtrl", changeTerritoryModal);
 	
-	function changeTerritoryModal(volunteer, territory, situation, $uibModalInstance, EmergencySituationResource, toastr, toastrConfig, TerritoryResource, authentication){
+	function changeTerritoryModal(volunteer, territory, situation, $uibModalInstance, EmergencySituationResource, toastr, toastrConfig, TerritoryResource, authentication, $state){
 		var vm = this;
 		
 		vm.volunteer = volunteer;
@@ -582,10 +606,13 @@
 						closeButton: true,
 						timeout: 3000
 					});
-					$uibModalInstance.close("error");
 					if(error.status === 403){
+						$uibModalInstance.close("403");
 						authentication.logout();
 						$state.go("root");
+					}
+					else{
+						$uibModalInstance.close("error");
 					}
 				});
 			}
@@ -602,10 +629,13 @@
 							closeButton: true,
 							timeout: 3000
 						});
-						$uibModalInstance.close("error");
 						if(error.status === 403){
+							$uibModalInstance.close("403");
 							authentication.logout();
 							$state.go("root");
+						}
+						else{
+							$uibModalInstance.close("error");
 						}
 					});
 				}
@@ -621,10 +651,13 @@
 							closeButton: true,
 							timeout: 3000
 						});
-						$uibModalInstance.close("error");
 						if(error.status === 403){
+							$uibModalInstance.close("403");
 							authentication.logout();
 							$state.go("root");
+						}
+						else{
+							$uibModalInstance.close("error");
 						}
 					});
 				}
@@ -636,5 +669,5 @@
 		}
 	}
 	
-	changeTerritoryModal.$inject = ["volunteer", "territory", "situation", "$uibModalInstance", "EmergencySituationResource", "toastr", "toastrConfig", "TerritoryResource", "authentication"];
+	changeTerritoryModal.$inject = ["volunteer", "territory", "situation", "$uibModalInstance", "EmergencySituationResource", "toastr", "toastrConfig", "TerritoryResource", "authentication", "$state"];
 })();

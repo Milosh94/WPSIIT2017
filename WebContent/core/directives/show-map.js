@@ -38,12 +38,14 @@
 	        		    	}
 	        		    	if(blank === true){
 	        		    		element.removeClass("map-showed");
+	        		    		element.parent().removeClass("height-400px");
 		        		    	element.html("<b>Location don't exist on the map.</b>");
 	        		    	}
 	        		    });
         			}
         			else{
         				element.removeClass("map-showed");
+        				element.parent().removeClass("height-400px");
         		    	element.html("<b>Location don't exist on the map.</b>");
         			}
 		        }

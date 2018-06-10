@@ -5,12 +5,17 @@
 	function myEmergencySituations(authentication, $timeout, $state, VolunteerResource){
 		var vm = this;
 		
-		vm.user = authentication.getUser();
-		if(vm.user === null){
-			$timeout(function(){
-				$state.go("root");
-			});
-		}
+		//authentication.getUser2().then(function(response){
+		//	vm.user = response;
+		//	console.log(response);
+		//});
+		vm.user = authentication.getLoggedUser();
+		console.log(vm.user);
+		//if(vm.user === null || vm.user === "logged-out"){
+			//$timeout(function(){
+			//	$state.go("root");
+			//});
+		//}
 		
 		vm.maxSize = 5;
 		vm.itemsPerPage = 10;
@@ -27,8 +32,8 @@
 			vm.changePage();
 		}, function(error){
 			if(error.status === 403){
-				authentication.logout();
-				$state.go("root");
+				//authentication.logout();
+				//$state.go("root");
 			}
 		});
 	}
@@ -41,12 +46,12 @@
 	function volunteers(authentication, $timeout, $state, VolunteerResource, $uibModal){
 		var vm = this;
 		
-		vm.user = authentication.getUser();
-		if(vm.user === null){
-			$timeout(function(){
-				$state.go("root");
-			});
-		}
+		vm.user = authentication.getLoggedUser();
+		//if(vm.user === null){
+		//	$timeout(function(){
+		//		$state.go("root");
+		//	});
+		//}
 		
 		vm.maxSize = 5;
 		vm.itemsPerPage = 10;

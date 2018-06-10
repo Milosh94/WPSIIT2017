@@ -191,7 +191,7 @@ public class UserService {
 				|| registerDTO.getPassword().contains(System.getProperty("line.separator")) || oldPassword.contains(System.getProperty("line.separator"))){
 			return Response.status(Status.BAD_REQUEST).build();
 		}
-		if(!u.getPassword().equals(oldPassword) && !oldPassword.equals("")){
+		if(!u.getPassword().equals(oldPassword) || !oldPassword.equals("")){
 			return Response.status(Status.BAD_REQUEST).entity("{\"wrongPassword\": true}").build();
 		}
 		boolean userExists = false;

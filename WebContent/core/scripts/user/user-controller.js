@@ -5,12 +5,12 @@
 	function profile(authentication, UserResource, $state, $timeout, $uibModal){
 		var vm = this;
 		
-		vm.user = authentication.getUser();
-		if(vm.user === null){
-			$timeout(function(){
-				$state.go("root");
-			});
-		}
+		vm.user = authentication.getLoggedUser();
+		//if(vm.user === null){
+		//	$timeout(function(){
+		//		$state.go("root");
+		//	});
+		//}
 		
 		UserResource.getLoggedUser().then(function(response){
 			vm.user = response;
@@ -32,7 +32,7 @@
 				}
 			});
 			modalInstance.result.then(function(){
-				vm.user = authentication.getUser();
+				vm.user = authentication.getLoggedUser();
 			}, function(res){});
 		}
 	}

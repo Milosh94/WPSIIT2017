@@ -166,7 +166,7 @@ public class TerritoryService {
 						return false;
 					}
 					else{
-						if(t.getName().toLowerCase().contains(search.toLowerCase().replaceAll("\\s+", " "))){
+						if(t.getName().toLowerCase().contains(search.toLowerCase().trim().replaceAll("\\s+", " "))){
 							return true;
 						}
 						else{

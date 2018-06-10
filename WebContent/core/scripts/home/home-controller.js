@@ -4,15 +4,15 @@
 	
 	function home(authentication, $state, $timeout, $uibModal, TerritoryResource, toastr, toastrConfig){
 		var vm = this;
-		
-		vm.user = authentication.getUser();
+		console.log("root state");
+		vm.user = authentication.getLoggedUser();
 		
 		vm.loginUser = {};
 		toastrConfig.maxOpened = 1;
 		toastrConfig.positionClass = "toast-top-center";
 		vm.login = function(){
 			authentication.login(vm.loginUser).then(function(response){
-					vm.user = authentication.getUser();
+					vm.user = authentication.getLoggedUser();
 					$state.go($state.current, {}, {reload: true});
 			}, function(error){
 				toastr.error("Wrong credentials!", "Error", {
@@ -33,7 +33,7 @@
 		
 		vm.logout = function(){
 			authentication.logout();
-			vm.user = authentication.getUser();
+			vm.user = authentication.getLoggedUser();
 			$state.go($state.current, {}, {reload: true});
 		}
 		
@@ -58,10 +58,6 @@
 			});
 			modalInstance.result.then(function(){}, function(res){});
 		}
-
-		$timeout(function(){
-			$state.go("home");
-		})
 	}
 	
 	home.$inject = ["authentication", "$state", "$timeout", "$uibModal", "TerritoryResource", "toastr", "toastrConfig"];
@@ -165,9 +161,8 @@
 	
 	function homepage(authentication, $timeout, $state, $uibModal, toastr, toastrConfig, $window){
 		var vm = this;
-		
-		vm.user = authentication.getUser();
-		
+		console.log("home state");
+		vm.user = authentication.getLoggedUser();
 		vm.activeButton = 1;
 		
 		vm.report = function(current){
@@ -231,10 +226,14 @@
 	//homepage search ctrl
 	app.controller("searchCtrl", search);
 	
-	function search(authentication, TerritoryResource, EmergencySituationResource){
+	function search(authentication, TerritoryResource, EmergencySituationResource, $state){
 		var vm = this;
-		
-		vm.user = authentication.getUser();
+		console.log("search state");
+		//vm.user = authentication.getUser();
+		//vm.user = $state.params.user;
+		//console.log($state.params);
+		vm.user = authentication.getLoggedUser();
+		console.log(vm.user);
 		
 		TerritoryResource.getTerritories().then(function(response){
 			vm.territories = response;
@@ -349,5 +348,5 @@
 		}
 	}
 	
-	search.$inject = ["authentication", "TerritoryResource", "EmergencySituationResource"];
+	search.$inject = ["authentication", "TerritoryResource", "EmergencySituationResource", "$state"];
 })(angular);

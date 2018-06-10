@@ -5,12 +5,12 @@
 	function territories(authentication, $timeout, $state, TerritoryResource, $uibModal){
 		var vm = this;
 		
-		vm.user = authentication.getUser();
-		if(vm.user === null){
-			$timeout(function(){
-				$state.go("root");
-			});
-		}
+		vm.user = authentication.getLoggedUser();
+		//if(vm.user === null){
+		//	$timeout(function(){
+		//		$state.go("root");
+		//	});
+		//}
 		
 		vm.maxSize = 5;
 		vm.itemsPerPage = 10;
@@ -96,7 +96,7 @@
 	//controller for creating new territory
 	app.controller("newTerritoryModalCtrl", newTerritoryModal);
 	
-	function newTerritoryModal($uibModalInstance, TerritoryResource, toastr, toastrConfig, authentication){
+	function newTerritoryModal($uibModalInstance, TerritoryResource, toastr, toastrConfig, authentication, $state){
 		var vm = this;
 		
 		vm.territory = {};
@@ -119,7 +119,7 @@
 				toastrConfig.maxOpened = 1;
 				toastrConfig.positionClass = "toast-top-center";
 				TerritoryResource.addTerritory(vm.territory).then(function(response){
-					toastr.success("Please login", "Success: Territory created", {
+					toastr.success("Territory created", "Success", {
 						closeButton: true,
 						timeout: 3000
 					});
@@ -151,12 +151,12 @@
 		}
 	}
 	
-	newTerritoryModal.$inject = ["$uibModalInstance", "TerritoryResource", "toastr", "toastrConfig", "authentication"];
+	newTerritoryModal.$inject = ["$uibModalInstance", "TerritoryResource", "toastr", "toastrConfig", "authentication", "$state"];
 	
 	//controller for updating existing territory
 	app.controller("updateTerritoryModalCtrl", updateTerritoryModal);
 	
-	function updateTerritoryModal($uibModalInstance, TerritoryResource, toastr, toastrConfig, territory, authentication){
+	function updateTerritoryModal($uibModalInstance, TerritoryResource, toastr, toastrConfig, territory, authentication, $state){
 		var vm = this;
 		
 		vm.territory = JSON.parse(JSON.stringify(territory));
@@ -179,7 +179,7 @@
 				toastrConfig.maxOpened = 1;
 				toastrConfig.positionClass = "toast-top-center";
 				TerritoryResource.updateTerritory(vm.territory).then(function(response){
-					toastr.success("Please login", "Success: Territory updated", {
+					toastr.success("Territory updated", "Success", {
 						closeButton: true,
 						timeout: 3000
 					});
@@ -210,12 +210,12 @@
 		}
 	}
 	
-	updateTerritoryModal.$inject = ["$uibModalInstance", "TerritoryResource", "toastr", "toastrConfig", "territory", "authentication"];
+	updateTerritoryModal.$inject = ["$uibModalInstance", "TerritoryResource", "toastr", "toastrConfig", "territory", "authentication", "$state"];
 	
 	//controller for deleting existing territory
 	app.controller("deleteTerritoryModalCtrl", deleteTerritoryModal);
 	
-	function deleteTerritoryModal($uibModalInstance, TerritoryResource, toastr, toastrConfig, territory, authentication){
+	function deleteTerritoryModal($uibModalInstance, TerritoryResource, toastr, toastrConfig, territory, authentication, $state){
 		var vm = this;
 		
 		vm.territory = territory;
@@ -224,7 +224,7 @@
 			toastrConfig.maxOpened = 1;
 			toastrConfig.positionClass = "toast-top-center";
 			TerritoryResource.deleteTerritory(vm.territory.id).then(function(response){
-				toastr.success("Please login", "Success: Territory deleted", {
+				toastr.success("Territory deleted", "Success", {
 					closeButton: true,
 					timeout: 3000
 				});
@@ -247,5 +247,5 @@
 		}
 	}
 	
-	deleteTerritoryModal.$inject = ["$uibModalInstance", "TerritoryResource", "toastr", "toastrConfig", "territory", "authentication"];
+	deleteTerritoryModal.$inject = ["$uibModalInstance", "TerritoryResource", "toastr", "toastrConfig", "territory", "authentication", "$state"];
 })();

@@ -72,7 +72,7 @@
 }
 
 .situation-img{
-	height: 20%;
+	width: 40%;
 }
 
 .map-border{
@@ -81,8 +81,12 @@
 	margin: 1%;
 }
 
+.height-400px{
+	height: 400px;
+}
+
 .map-showed{
-	height: 40%;
+	height: 100%;
 }
 
 .comment-img{
