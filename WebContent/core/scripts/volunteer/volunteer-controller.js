@@ -32,8 +32,8 @@
 			vm.changePage();
 		}, function(error){
 			if(error.status === 403){
-				//authentication.logout();
-				//$state.go("root");
+				authentication.logout();
+				$state.go("root");
 			}
 		});
 	}

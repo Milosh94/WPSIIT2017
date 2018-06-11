@@ -14,8 +14,8 @@
 				user = JSON.parse(user);
 				var d = new Date();
 				d.setHours(d.getHours() - 1);
-				//if(new Date(user.accessTime) < d){
-				if(true){
+				if(new Date(user.accessTime) < d){
+				//if(true){
 					UserResource.getLoggedUser().then(function(response){
 						retObj.saveUser(response);
 						deferred.resolve(response);

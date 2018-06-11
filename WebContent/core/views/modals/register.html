@@ -2,7 +2,7 @@
 	<h3 class="modal-title">Registration form</h3>
 </div>
 <div class="modal-body">
-	<form name="vm.registerForm" ng-submit="vm.register(vm.registerForm.$valid)" novalidate>
+	<form name="vm.registerForm" ng-submit="vm.register(vm.registerForm.$valid, vm.registerForm)" novalidate>
 		<div class="form-group" ng-class="{'has-error': vm.registerForm.username.$touched && vm.registerForm.username.$invalid}">
 			<label for="usernameId">Username</label>
 			<input name="username" id="usernameId" type="text" class="form-control" ng-model="vm.data.username" ng-change="vm.usernameExists()" input-validation required/>
